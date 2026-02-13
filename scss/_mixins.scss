@@ -1,0 +1,16 @@
+// Reusable mixins
+@mixin glass($blur: 12px, $alpha: .58, $borderAlpha: .28) {
+  background: rgba(255,255,255,$alpha);
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  border: 1px solid rgba(255,255,255,$borderAlpha);
+  box-shadow: 0 12px 30px rgba(15,36,66,.12);
+  border-radius: 16px;
+}
+
+@mixin tile() {
+  background: $sky-surface;
+  border: 1px solid $sky-border;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(15, 36, 66, 0.08);
+}

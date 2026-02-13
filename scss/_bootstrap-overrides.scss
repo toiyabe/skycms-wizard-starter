@@ -1,0 +1,13 @@
+// Expose Bootstrap CSS variables with Sky tokens
+:root {
+  --bs-body-bg: #{$sky-bg};
+  --bs-body-color: #{$sky-text-700};
+  --bs-primary: #{$sky-primary-500};
+  --bs-heading-color: #{$sky-text-900};
+  --bs-link-color: #{$sky-primary-600};
+  --bs-border-color: #{$sky-border};
+  --bs-link-hover-color: #1c65b8;
+  --bs-border-radius: 12px;
+  --bs-border-radius-lg: 16px;
+  --bs-btn-border-radius: 12px;
+}

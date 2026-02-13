@@ -1,0 +1,23 @@
+@use "./sky_hero.tokens" as t;
+@use "./sky_hero.mixins" as m;
+@use "./sky_hero.utilities";
+
+:root {
+  --sky-veil-opacity: #{t.$sky-veil-opacity};
+  --sky-radius:       #{t.$sky-radius};
+  --sky-radius-sm:    #{t.$sky-radius-sm};
+  --sky-shadow-strong: #{t.$sky-shadow-strong};
+  --sky-shadow-tile:   #{t.$sky-shadow-tile};
+}
+
+.sky-hero-bg-vars {
+  @include m.sky-hero-background();
+  &::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: rgba(255,255,255, var(--sky-veil-opacity, #{t.$sky-veil-opacity}));
+    pointer-events: none; z-index: 0;
+  }
+}
+
+@forward "./sky_hero.utilities";

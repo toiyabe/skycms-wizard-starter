@@ -1,0 +1,29 @@
+@use "./sky_hero.tokens" as t;
+@use "./sky_hero.mixins" as m;
+
+.sky-hero-bg {
+  @include m.sky-hero-background();
+  @include m.sky-hero-veil();
+}
+
+.sky-page-bg { @include m.sky-page-background(); }
+
+.sky-panel {
+  position: relative;
+  z-index: 1;
+  background: rgba(255,255,255,.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: t.$sky-radius;
+  box-shadow: t.$sky-shadow-strong;
+}
+
+.sky-tile {
+  background: #fff;
+  border: 1px solid #e6ebf2;
+  border-radius: t.$sky-radius-sm;
+  box-shadow: t.$sky-shadow-tile;
+  transition: box-shadow .2s ease, transform .2s ease;
+  &:hover { transform: translateY(-2px); box-shadow: t.$sky-shadow-strong; }
+}

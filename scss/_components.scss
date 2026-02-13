@@ -1,0 +1,59 @@
+@use "./tokens" as *;
+@use "./mixins" as *;
+
+:root {
+  --sky-primary-50:  #{$sky-primary-50};
+  --sky-primary-100: #{$sky-primary-100};
+  --sky-primary-300: #{$sky-primary-300};
+  --sky-primary-500: #{$sky-primary-500};
+  --sky-primary-600: #{$sky-primary-600};
+
+  --sky-text-900:    #{$sky-text-900};
+  --sky-text-700:    #{$sky-text-700};
+  --sky-text-muted:  #{$sky-text-muted};
+
+  --sky-bg:          #{$sky-bg};
+  --sky-surface:     #{$sky-surface};
+  --sky-border:      #{$sky-border};
+
+  --sky-radius:      #{$sky-radius};
+  --sky-radius-sm:   #{$sky-radius-sm};
+
+  --sky-shadow-1:    #{$sky-shadow-1};
+  --sky-shadow-2:    #{$sky-shadow-2};
+
+  --sky-required:    #{$sky-required};
+  --sky-ready:       #{$sky-ready};
+  --sky-optional:    #{$sky-optional};
+  --sky-attention:   #{$sky-attention};
+}
+
+/* Background */
+.body, .sky-hero {
+  background:
+    radial-gradient(1200px 700px at 50% -20%, rgba(77,163,255,0.18), transparent 70%),
+    url('../img/clouds-subtle.svg') center/cover no-repeat,
+    var(--sky-bg);
+}
+
+/* Glass panel */
+.sky-glass { @include glass(12px, .58, .28); }
+
+/* Tile */
+.sky-tile {
+  @include tile();
+  transition: box-shadow .2s ease, transform .2s ease;
+  &:hover { transform: translateY(-2px); box-shadow: var(--sky-shadow-2); }
+}
+
+/* Badges */
+.badge-required  { background: rgba(26,115,232,.12); color: var(--sky-required); }
+.badge-ready     { background: rgba(33,195,125,.14); color: var(--sky-ready); }
+.badge-optional  { background: rgba(136,152,170,.12); color: var(--sky-optional); }
+.badge-attention { background: rgba(255,159,26,.14); color: var(--sky-attention); }
+
+/* Animation */
+.fade-in {
+  animation: fadeIn .25s ease forwards;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px);} to { opacity: 1; transform: translateY(0);} }

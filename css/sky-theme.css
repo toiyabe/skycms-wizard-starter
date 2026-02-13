@@ -1,0 +1,86 @@
+/* SkyCMS theme (compiled CSS) */
+:root {
+  /* Brand */
+  --sky-primary-50:  #e8f3ff;
+  --sky-primary-100: #d2e8ff;
+  --sky-primary-300: #8ec7ff;
+  --sky-primary-500: #4da3ff;
+  --sky-primary-600: #2f7ed6;
+
+  /* Text */
+  --sky-text-900:    #0f1f33;
+  --sky-text-700:    #334155;
+  --sky-text-muted:  #6b7785;
+
+  /* Neutrals */
+  --sky-bg:          #f7f9fc;
+  --sky-surface:     #ffffff;
+  --sky-border:      #e5e9f2;
+
+  /* Radii */
+  --sky-radius:      16px;
+  --sky-radius-sm:   12px;
+
+  /* Shadows */
+  --sky-shadow-1:    0 4px 14px rgba(15, 36, 66, 0.08);
+  --sky-shadow-2:    0 12px 30px rgba(15, 36, 66, 0.12);
+
+  /* States */
+  --sky-required:    #1a73e8;
+  --sky-ready:       #21c37d;
+  --sky-optional:    #8898aa;
+  --sky-attention:   #ff9f1a;
+
+  /* Bootstrap bridges */
+  --bs-body-bg: var(--sky-bg);
+  --bs-body-color: var(--sky-text-700);
+  --bs-primary: var(--sky-primary-500);
+  --bs-heading-color: var(--sky-text-900);
+  --bs-link-color: var(--sky-primary-600);
+  --bs-border-color: var(--sky-border);
+  --bs-link-hover-color: #1c65b8;
+  --bs-border-radius: var(--sky-radius-sm);
+  --bs-border-radius-lg: var(--sky-radius);
+  --bs-btn-border-radius: var(--sky-radius-sm);
+}
+
+body.sky-hero {
+  background:
+    radial-gradient(1200px 700px at 50% -20%, rgba(77,163,255,0.18), transparent 70%),
+    url('../img/HeroBackground.jpg') center/cover no-repeat,
+    var(--sky-bg);
+  background-attachment: fixed;
+}
+
+/* Main glass container */
+.sky-glass {
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.28);
+  box-shadow: var(--sky-shadow-2);
+  border-radius: var(--sky-radius);
+}
+
+/* Tiles */
+.sky-tile {
+  background: var(--sky-surface);
+  border: 1px solid var(--sky-border);
+  border-radius: var(--sky-radius-sm);
+  box-shadow: var(--sky-shadow-1);
+  transition: box-shadow .2s ease, transform .2s ease;
+}
+.sky-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sky-shadow-2);
+}
+
+/* Status badges */
+.badge-required  { background: rgba(26,115,232,0.12); color: var(--sky-required); }
+.badge-ready     { background: rgba(33,195,125,0.14); color: var(--sky-ready); }
+.badge-optional  { background: rgba(136,152,170,0.12); color: var(--sky-optional); }
+.badge-attention { background: rgba(255,159,26,0.14); color: var(--sky-attention); }
+
+/* Small fade-in utility */
+.fade-in { animation: fadeIn .25s ease forwards; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px);} to { opacity: 1; transform: translateY(0);} }

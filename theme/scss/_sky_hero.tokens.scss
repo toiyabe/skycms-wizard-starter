@@ -1,0 +1,24 @@
+// SkyCMS • Concept-B Static Cloud Background (with veil)
+// Tokens (edit here to re-theme)
+
+$sky-hero-image-path: "../img/sky-hero.webp" !default;
+
+$sky-fade-stops: (
+  (0%,   0.00),
+  (22%,  0.08),
+  (45%,  0.18),
+  (65%,  0.32),
+  (100%, 0.55)
+) !default;
+
+$sky-veil-opacity: 0.12 !default;
+$sky-background-attachment: fixed !default;
+$sky-min-height: 100vh !default;
+
+$sky-page-bg: radial-gradient(1200px 700px at 50% -20%, rgba(77,163,255,.18), transparent 70%),
+              linear-gradient(#eaf4ff, #f7f9fc) !default;
+
+$sky-radius: 16px !default;
+$sky-radius-sm: 12px !default;
+$sky-shadow-strong: 0 12px 30px rgba(15,36,66,.12) !default;
+$sky-shadow-tile:   0 4px 14px  rgba(15,36,66,.08) !default;

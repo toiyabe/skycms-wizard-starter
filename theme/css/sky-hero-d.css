@@ -1,0 +1,69 @@
+/* Precompiled CSS for static cloud hero with veil */
+.sky-hero-bg {
+  position: relative;
+  min-height: 100vh;
+  background: url('/img/HeroBackground.jpg') center/cover no-repeat;
+  background-attachment: fixed;
+  overflow: hidden;
+}
+
+/* Pixel-precise fade (white → transparent) */
+.sky-hero-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+
+  /* TOP TO 50PX: full white
+     50PX TO 300PX: fade
+     AFTER 300PX: transparent */
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 1) 0px,
+    rgba(255, 255, 255, 1) 10vh, /* 10% of the viewport height */
+    rgba(255, 255, 255, 0.7) 30vh, /* 30% of the viewport height */
+    rgba(255, 255, 255, 0.5) 100%
+  );
+}
+
+
+/* /img/HeroBackground.jpg */
+
+.sky-hero-bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, .12);
+    pointer-events: none;
+    z-index: 0
+}
+
+.sky-page-bg {
+    background: radial-gradient(1200px 700px at 50% -20%, rgba(77, 163, 255, .18), transparent 70%), linear-gradient(#eaf4ff, #f7f9fc);
+    min-height: 100vh
+}
+
+.sky-panel {
+    position: relative;
+    z-index: 1;
+    background: rgba(255, 255, 255, .35);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, .28);
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(15, 36, 66, .12)
+}
+
+.sky-tile {
+    background: #fff;
+    border: 1px solid #e6ebf2;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(15, 36, 66, .08);
+    transition: box-shadow .2s ease, transform .2s ease
+}
+
+.sky-tile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(15, 36, 66, .12)
+}

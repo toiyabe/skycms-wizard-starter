@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SkyCMS — Static Cloud Hero (Concept‑B with Veil)</title>
+
+  <!-- (Optional) Bootstrap just for demo layout -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="theme/css/sky-hero-d.css" />
+  <style>
+    body {
+      margin: 0;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: clamp(24px, 6vw, 60px) 24px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    
+  </style>
+</head>
+
+<body class="sky-hero-bg">
+  <div class="container">
+    <div class="sky-panel p-4 p-md-5">
+      <div style="text-align:center; margin-bottom: 16px;">
+        <div style="font-size:2rem" aria-hidden="true">☁️</div>
+        <h1 style="margin:.25rem 0 .5rem 0;">SkyCMS — Static Clouds (Veil)</h1>
+        <p style="margin:0; color:#6b7785;">Drop your wizard content here. The background uses your cloud image with a
+          top‑transparent fade and a subtle white veil.</p>
+      </div>
+      <div class="grid">
+        <div class="sky-tile p-3">
+          <h2 style="margin-top:0;">Before You Begin</h2>
+          <p>Place your required items here (e.g., Admin Email &amp; Password).</p>
+        </div>
+        <div class="sky-tile p-3">
+          <h2 style="margin-top:0;">Already Set Up</h2>
+          <p>Database connection, storage, and other ready states.</p>
+        </div>
+      </div>
+      <div class="grid mt-4">
+        <div class="sky-tile p-3" style="grid-column:1/-1;">
+          <h2 style="margin-top:0;">Next Step</h2>
+          <p>Call‑to‑action goes here (e.g., <em>Start Setup</em>).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

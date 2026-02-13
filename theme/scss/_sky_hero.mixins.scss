@@ -1,0 +1,40 @@
+@use "sass:map";
+@use "sass:list";
+@use "./sky_hero.tokens" as t;
+
+@function _sky-fade-gradient() {
+  $stops: ();
+  @each $stop in t.$sky-fade-stops {
+    $pos: list.nth($stop, 1);
+    $alpha: list.nth($stop, 2);
+    $stops: list.append($stops, rgba(255,255,255,$alpha) $pos, comma);
+  }
+  @return unquote("linear-gradient(to bottom, #{list.join($stops, ', ')})");
+}
+
+@mixin sky-hero-background($image-path: t.$sky-hero-image-path) {
+  background:
+    #{_sky-fade-gradient()},
+    url(#{$image-path}) center/cover no-repeat;
+  background-attachment: t.$sky-background-attachment;
+  min-height: t.$sky-min-height;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+@mixin sky-hero-veil($opacity: t.$sky-veil-opacity) {
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255, #{$opacity});
+    pointer-events: none;
+    z-index: 0;
+  }
+}
+
+@mixin sky-page-background() {
+  background: t.$sky-page-bg;
+  min-height: 100vh;
+}
