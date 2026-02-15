@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <meta name="cwps-meta-v-id" content="@version" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    <style>
+        .nav-link {
+            color: white;
+        }
+
+        .nav-link:hover {
+            color: yellow;
+        }
+
+        .text-danger {
+            color: yellow !important;
+        }
+
+        a:hover {
+            color: yellow;
+        }
+
+        a {
+            color: wheat;
+        }
+
+        .setup-wizard {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .setup-step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .setup-step {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border-bottom: 3px solid #dee2e6;
+            color: #6c757d;
+        }
+
+        .setup-step.active {
+            border-bottom-color: #007bff;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .setup-step.completed {
+            border-bottom-color: #28a745;
+            color: #28a745;
+        }
+
+        .test-result {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .test-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .test-error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        /* Highlight validation errors */
+        .input-validation-error {
+            border-color: #dc3545 !important;
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+        }
+
+        .field-validation-error {
+            display: block;
+            margin-top: 0.25rem;
+            font-size: 0.875em;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    @await RenderSectionAsync("Styles", false)
+</head>
+
+<body class="cwps-body bg-dark text-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <!-- Toggle button -->
+        <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarCenteredExample"
+            aria-controls="navbarCenteredExample" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Collapsible wrapper -->
+        <div class="collapse navbar-collapse justify-content-center" id="navbarCenteredExample">
+            <!-- Left links -->
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">
+                        <img src="/images/skycms/SkyCMSLogoNoWiTextDarkTransparent30h.png" height="30" />
+                    </a>
+                </li>
+            </ul>
+            <!-- Left links -->
+        </div>
+        <!-- Collapsible wrapper -->
+    </nav>
+    <div id="main-content" class="main-content">
+        <div class="container m-y-lg">
+            <main class="main-primary">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <h2>CDN Configuration</h2>
+                        <p class="text-muted text-light">Configure a Content Delivery Network for cache management
+                            (optional)</p>
+
+                        <div class="alert alert-info">
+                            <strong><i class="fas fa-info-circle"></i> Optional Configuration:</strong>
+                            CDN configuration is optional. You can skip this step and configure it later through the
+                            admin panel.
+                        </div>
+
+                        <form method="post" id="cdnForm">
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                            <input type="hidden" name="SetupId" asp-for="SetupId" />
+
+                            <!-- Provider Selection -->
+                            <div class="card mb-3 bg-secondary text-light">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-network-wired"></i> Select CDN Provider</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <div class="form-group">
+                                            <div id="cdnConfigAlert" class="alert alert-primary" role="alert"
+                                                style="display:none;">
+                                                CDN already set and cannot be changed at this time.
+                                            </div>
+                                            <label asp-for="SelectedProvider">CDN Provider</label>
+                                            <select asp-for="SelectedProvider" class="form-control"
+                                                id="cdnProviderSelect">
+                                                <option value="None">None - Skip CDN Configuration</option>
+                                                <option value="Azure">Azure CDN / Front Door</option>
+                                                <option value="Cloudflare">CloudFlare</option>
+                                                <option value="Cloudfront">CloudFront</option>
+                                                <option value="Sucuri">Sucuri WAF/CDN</option>
+                                            </select>
+                                            <small class="form-text text-light">
+                                                Select a CDN provider or choose "None" to skip this step.
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Azure CDN Configuration -->
+                                <div class="card mb-3 bg-secondary text-light" id="azureConfig" style="display: none;">
+                                    <div class="card-header">
+                                        <h5 class="mb-0"><i class="fab fa-microsoft"></i> Azure Front Door</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="alert alert-info">
+                                            <strong>Authentication:</strong> Uses Azure Managed Identity or
+                                            DefaultAzureCredential.
+                                            Ensure your application has access to the CDN/Front Door resource.
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label asp-for="AzureSubscriptionId">Subscription ID <span
+                                                    class="text-danger provider-required">*</span></label>
+                                            <input asp-for="AzureSubscriptionId" class="form-control"
+                                                placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" />
+                                            <span asp-validation-for="AzureSubscriptionId" class="text-danger"></span>
+                                            <small class="form-text text-muted">Azure subscription containing the
+                                                CDN/Front Door.</small>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label asp-for="AzureResourceGroup">Resource Group <span
+                                                    class="text-danger provider-required">*</span></label>
+                                            <input asp-for="AzureResourceGroup" class="form-control"
+                                                placeholder="my-resource-group" />
+                                            <span asp-validation-for="AzureResourceGroup" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label asp-for="AzureProfileName">Profile Name <span
+                                                    class="text-danger provider-required">*</span></label>
+                                            <input asp-for="AzureProfileName" class="form-control"
+                                                placeholder="my-cdn-profile" />
+                                            <span asp-validation-for="AzureProfileName" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label asp-for="AzureEndpointName">Endpoint Name <span
+                                                    class="text-danger provider-required">*</span></label>
+                                            <input asp-for="AzureEndpointName" class="form-control"
+                                                placeholder="my-endpoint" />
+                                            <span asp-validation-for="AzureEndpointName" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="form-check mb-3">
+                                            <input asp-for="AzureIsFrontDoor" class="form-check-input"
+                                                type="checkbox" />
+                                            <label asp-for="AzureIsFrontDoor" class="form-check-label">
+                                                Use Azure Front Door (instead of Azure CDN)
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Cloudflare Configuration -->
+                                <div class="card mb-3 bg-secondary text-light" id="cloudflareConfig"
+                                    style="display: none;">
+                                    <div class="card-header">
+                                        <h5 class="mb-0"><i class="fab fa-cloudflare"></i> Cloudflare</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="alert alert-info">
+                                            <strong>Requirements:</strong> Create an API token with Zone.Cache Purge
+                                            permissions at
+                                            <a href="https://dash.cloudflare.com/profile/api-tokens" target="_blank"
+                                                class="text-white">
+                                                Cloudflare Dashboard <i class="fas fa-external-link-alt"></i>
+                                            </a>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label asp-for="CloudflareApiToken">API Token <span
+                                                    class="text-danger provider-required">*</span></label>
+                                            <input asp-for="CloudflareApiToken" class="form-control" type="password"
+                                                placeholder="Your Cloudflare API token" />
+                                            <span asp-validation-for="CloudflareApiToken" class="text-danger"></span>
+                                            <small class="form-text text-muted">Token with Cache Purge
+                                                permissions.</small>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label asp-for="CloudflareZoneId">Zone ID <span
+                                                    class="text-danger provider-required">*</span></label>
+                                            <input asp-for="CloudflareZoneId" class="form-control"
+                                                placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
+                                            <span asp-validation-for="CloudflareZoneId" class="text-danger"></span>
+                                            <small class="form-text text-muted">
+                                                Find your Zone ID on the Cloudflare dashboard under your domain.
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- CloudFront Configuration -->
+                                <div class="card mb-3 bg-secondary text-light" id="cloudfrontConfig"
+                                    style="display: none;">
+                                    <div class="card-header">
+                                        <h5 class="mb-0"><i class="fab fa-aws"></i> AWS CloudFront</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="alert alert-info">
+                                            <strong>Requirements:</strong> Create an IAM user with CloudFront cache
+                                            invalidation permissions.
+                                            Required permission: <code>cloudfront:CreateInvalidation</code>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label asp-for="CloudFrontAccessKeyId">Access Key ID <span
+                                                    class="text-danger provider-required">*</span></label>
+                                            <input asp-for="CloudFrontAccessKeyId" class="form-control"
+                                                placeholder="AKIAIOSFODNN7EXAMPLE" />
+                                            <span asp-validation-for="CloudFrontAccessKeyId" class="text-danger"></span>
+                                            <small class="form-text text-muted">AWS IAM Access Key ID with CloudFront
+                                                permissions.</small>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label asp-for="CloudFrontSecretAccessKey">Secret Access Key <span
+                                                    class="text-danger provider-required">*</span></label>
+                                            <input asp-for="CloudFrontSecretAccessKey" class="form-control"
+                                                type="password" placeholder="Your AWS Secret Access Key" />
+                                            <span asp-validation-for="CloudFrontSecretAccessKey"
+                                                class="text-danger"></span>
+                                            <small class="form-text text-muted">AWS Secret Access Key (stored
+                                                securely).</small>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label asp-for="CloudFrontDistributionId">Distribution ID <span
+                                                    class="text-danger provider-required">*</span></label>
+                                            <input asp-for="CloudFrontDistributionId" class="form-control"
+                                                placeholder="E1234567890ABC" />
+                                            <span asp-validation-for="CloudFrontDistributionId"
+                                                class="text-danger"></span>
+                                            <small class="form-text text-muted">
+                                                Find your Distribution ID in the AWS CloudFront console.
+                                            </small>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label asp-for="CloudFrontRegion">AWS Region</label>
+                                            <input asp-for="CloudFrontRegion" class="form-control"
+                                                placeholder="us-east-1" />
+                                            <span asp-validation-for="CloudFrontRegion" class="text-danger"></span>
+                                            <small class="form-text text-muted">
+                                                AWS region (optional, defaults to us-east-1 for CloudFront).
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sucuri Configuration -->
+                                <div class="card mb-3 bg-secondary text-light" id="sucuriConfig" style="display: none;">
+                                    <div class="card-header">
+                                        <h5 class="mb-0"><i class="fas fa-shield-alt"></i> Sucuri WAF/CDN</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="alert alert-info">
+                                            <strong>Requirements:</strong> Obtain API credentials from your Sucuri
+                                            account dashboard.
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label asp-for="SucuriApiKey">API Key <span
+                                                    class="text-danger provider-required">*</span></label>
+                                            <input asp-for="SucuriApiKey" class="form-control" type="password"
+                                                placeholder="Your Sucuri API key" />
+                                            <span asp-validation-for="SucuriApiKey" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label asp-for="SucuriApiSecret">API Secret <span
+                                                    class="text-danger provider-required">*</span></label>
+                                            <input asp-for="SucuriApiSecret" class="form-control" type="password"
+                                                placeholder="Your Sucuri API secret" />
+                                            <span asp-validation-for="SucuriApiSecret" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="alert alert-warning">
+                                            <strong>Note:</strong> Sucuri supports purging up to 20 individual URLs per
+                                            request.
+                                            Larger requests will purge the entire cache.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="d-flex justify-content-between mt-4">
+                                    <a href="@Url.Page(" ./Step4_Email")" class="btn btn-secondary">
+                                        <i class="fas fa-arrow-left"></i> Back
+                                    </a>
+                                    <div>
+                                        <button type="submit" class="btn btn-primary" id="saveBtn">
+                                            Save & Continue <i class="fas fa-arrow-right"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                        </form>
+                    </div>
+                </div>
+
+                <script>
+                    const isPreconfigured = false;
+                    $(document).ready(function () {
+                        var form = $('#cdnForm');
+                        var saveBtn = $('#saveBtn');
+                        if (isPreconfigured) {
+                            $('#cdnProviderSelect').prop('disabled', true);
+                            $('#cdnConfigAlert').show();
+                            saveBtn.text('Continue').prepend('<i class="fas fa-arrow-right"></i> ');
+                            // Disable all inputs
+                            $('input, select, textarea', form).prop('readonly', true);
+                        }
+
+                        // Configure validation
+                        $.validator.setDefaults({
+                            highlight: function (element) {
+                                $(element).addClass('is-invalid').removeClass('is-valid');
+                            },
+                            unhighlight: function (element) {
+                                $(element).removeClass('is-invalid').addClass('is-valid');
+                            },
+                            errorElement: 'span',
+                            errorClass: 'text-danger',
+                            errorPlacement: function (error, element) {
+                                error.insertAfter(element);
+                            }
+                        });
+
+                        // Show/hide configuration sections based on provider selection
+                        function updateProviderDisplay() {
+                            var provider = $('#cdnProviderSelect').val();
+
+                            $('#azureConfig').hide();
+                            $('#cloudflareConfig').hide();
+                            $('#cloudfrontConfig').hide();
+                            $('#sucuriConfig').hide();
+
+                            // Remove all required attributes
+                            $('input', '#azureConfig, #cloudflareConfig, #cloudfrontConfig, #sucuriConfig').removeAttr('required');
+
+                            if (provider === 'Azure') {
+                                $('#azureConfig').show();
+                                $('#azureConfig input:not([type="checkbox"])').attr('required', 'required');
+                            } else if (provider === 'Cloudflare') {
+                                $('#cloudflareConfig').show();
+                                $('#cloudflareConfig input').attr('required', 'required');
+                            } else if (provider === 'Cloudfront') {
+                                $('#cloudfrontConfig').show();
+                                $('#cloudfrontConfig input:not([name="CloudfrontRegion"])').attr('required', 'required');
+                            } else if (provider === 'Sucuri') {
+                                $('#sucuriConfig').show();
+                                $('#sucuriConfig input').attr('required', 'required');
+                            }
+
+                            // Revalidate the form
+                            form.validate().resetForm();
+                        }
+
+                        // Initialize display
+                        updateProviderDisplay();
+
+                        // Update on change
+                        $('#cdnProviderSelect').change(updateProviderDisplay);
+
+                        // Form validation before submit
+                        form.on('submit', function (e) {
+                            var provider = $('#cdnProviderSelect').val();
+
+                            // Allow skip button to bypass validation
+                            if ($(document.activeElement).attr('asp-page-handler') === 'Skip') {
+                                return true;
+                            }
+
+                            // If a provider is selected, validate required fields
+                            if (provider !== 'None') {
+                                var isValid = true;
+                                var errorMsg = '';
+
+                                if (provider === 'Azure') {
+                                    if (!$('input[name="AzureSubscriptionId"]').val() ||
+                                        !$('input[name="AzureResourceGroup"]').val() ||
+                                        !$('input[name="AzureProfileName"]').val() ||
+                                        !$('input[name="AzureEndpointName"]').val()) {
+                                        isValid = false;
+                                        errorMsg = 'All Azure CDN fields are required when Azure is selected.';
+                                    }
+                                } else if (provider === 'Cloudflare') {
+                                    if (!$('input[name="CloudflareApiToken"]').val() ||
+                                        !$('input[name="CloudflareZoneId"]').val()) {
+                                        isValid = false;
+                                        errorMsg = 'Both Cloudflare API Token and Zone ID are required.';
+                                    }
+                                } else if (provider === 'Cloudfront') {
+                                    if (!$('input[name="CloudfrontAccessKeyId"]').val() ||
+                                        !$('input[name="CloudfrontSecretAccessKey"]').val() ||
+                                        !$('input[name="CloudfrontDistributionId"]').val()) {
+                                        isValid = false;
+                                        errorMsg = 'CloudFront Access Key ID, Secret Access Key, and Distribution ID are required.';
+                                    }
+                                } else if (provider === 'Sucuri') {
+                                    if (!$('input[name="SucuriApiKey"]').val() ||
+                                        !$('input[name="SucuriApiSecret"]').val()) {
+                                        isValid = false;
+                                        errorMsg = 'Both Sucuri API Key and API Secret are required.';
+                                    }
+                                }
+
+                                if (!isValid) {
+                                    e.preventDefault();
+                                    alert(errorMsg);
+                                    return false;
+                                }
+                            }
+                        });
+                    });
+                </script>
+            </main>
+        </div>
+    </div>
+    <footer id="footer" class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="three-quarters">
+                </div>
+                <div class="quarter text-right">
+                    <ul class="socialsharer-container">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+        crossorigin="anonymous"></script>
+    <script src="~/lib/jquery-validate/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+</body>
+
+</html>
