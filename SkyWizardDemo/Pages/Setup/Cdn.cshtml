@@ -1,0 +1,78 @@
+@page
+@{
+    Layout = "_LayoutSetup";
+    ViewData["Title"] = "SkyCMS Setup - CDN";
+    ViewData["BodyId"] = "wizard-step-cdn";
+    ViewData["BodyClass"] = "wizard-theme wizard-step-cdn";
+}
+
+@await Html.PartialAsync("_WizardProgress", 5)
+
+<main>
+    <h1 class="wizard-title">CDN Configuration</h1>
+    <p class="wizard-subtitle">Configure a Content Delivery Network for cache management (optional).</p>
+
+    <div class="wizard-alert wizard-alert-info mb-4">
+        <strong><i class="fa-solid fa-circle-info me-1"></i>Optional Configuration:</strong>
+        You can skip this step and configure CDN later through the admin panel.
+    </div>
+
+    <section class="wizard-card">
+        <div class="wizard-card-head"><i class="fa-solid fa-network-wired me-2"></i>Select CDN Provider</div>
+        <div class="wizard-card-body">
+            <form id="cdnForm" method="post" novalidate data-next-url="@Url.Page("./Review")">
+                <div class="mb-3">
+                    <label class="wizard-form-label" for="cdnProvider">CDN Provider</label>
+                    <select id="cdnProvider" name="SelectedProvider" class="form-select">
+                        <option value="None" selected>None - Skip CDN Configuration</option>
+                        <option value="Azure">Azure CDN / Front Door</option>
+                        <option value="Cloudflare">Cloudflare</option>
+                        <option value="Cloudfront">CloudFront</option>
+                        <option value="Sucuri">Sucuri WAF/CDN</option>
+                    </select>
+                    <small class="form-text">Select a CDN provider or choose \"None\" to skip this step.</small>
+                </div>
+
+                <div id="azureConfig" class="wizard-hidden mb-3">
+                    <div class="row g-3">
+                        <div class="col-md-6"><input class="form-control" id="azureSubscriptionId" name="AzureSubscriptionId" placeholder="Subscription ID"></div>
+                        <div class="col-md-6"><input class="form-control" id="azureResourceGroup" name="AzureResourceGroup" placeholder="Resource Group"></div>
+                        <div class="col-md-6"><input class="form-control" id="azureProfileName" name="AzureProfileName" placeholder="Profile Name"></div>
+                        <div class="col-md-6"><input class="form-control" id="azureEndpointName" name="AzureEndpointName" placeholder="Endpoint Name"></div>
+                    </div>
+                </div>
+
+                <div id="cloudflareConfig" class="wizard-hidden mb-3">
+                    <div class="row g-3">
+                        <div class="col-md-6"><input class="form-control" id="cloudflareApiToken" name="CloudflareApiToken" type="password" placeholder="Cloudflare API Token"></div>
+                        <div class="col-md-6"><input class="form-control" id="cloudflareZoneId" name="CloudflareZoneId" placeholder="Cloudflare Zone ID"></div>
+                    </div>
+                </div>
+
+                <div id="cloudfrontConfig" class="wizard-hidden mb-3">
+                    <div class="row g-3">
+                        <div class="col-md-4"><input class="form-control" id="cloudFrontAccessKeyId" name="CloudFrontAccessKeyId" placeholder="Access Key ID"></div>
+                        <div class="col-md-4"><input class="form-control" id="cloudFrontSecretAccessKey" name="CloudFrontSecretAccessKey" type="password" placeholder="Secret Access Key"></div>
+                        <div class="col-md-4"><input class="form-control" id="cloudFrontDistributionId" name="CloudFrontDistributionId" placeholder="Distribution ID"></div>
+                    </div>
+                </div>
+
+                <div id="sucuriConfig" class="wizard-hidden mb-3">
+                    <div class="row g-3">
+                        <div class="col-md-6"><input class="form-control" id="sucuriApiKey" name="SucuriApiKey" type="password" placeholder="Sucuri API Key"></div>
+                        <div class="col-md-6"><input class="form-control" id="sucuriApiSecret" name="SucuriApiSecret" type="password" placeholder="Sucuri API Secret"></div>
+                    </div>
+                </div>
+
+                <div class="wizard-actions">
+                    <a href="@Url.Page("./Email")" class="btn btn-sky-secondary"><i class="fa-solid fa-arrow-left me-1"></i>Back</a>
+                    <button type="submit" class="btn btn-sky-primary">Save &amp; Continue <i class="fa-solid fa-arrow-right ms-1"></i></button>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
+
+@section Scripts {
+    <script src="~/js/wizard-cdn.js"></script>
+}

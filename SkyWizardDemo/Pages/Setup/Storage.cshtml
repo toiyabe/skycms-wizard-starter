@@ -1,0 +1,58 @@
+@page
+@{
+    Layout = "_LayoutSetup";
+    ViewData["Title"] = "SkyCMS Setup - Storage";
+    ViewData["BodyId"] = "wizard-step-storage";
+    ViewData["BodyClass"] = "wizard-theme wizard-step-storage";
+}
+
+@await Html.PartialAsync("_WizardProgress", 1)
+
+<main>
+    <h1 class="wizard-title">Storage Configuration</h1>
+    <p class="wizard-subtitle">Configure your cloud storage for static assets.</p>
+
+    <section class="wizard-card">
+        <div class="wizard-card-head">Storage Provider</div>
+        <div class="wizard-card-body">
+            <form id="storageForm" method="post" novalidate>
+                <div class="mb-3">
+                    <label class="wizard-form-label" for="storageType">Select Storage Type <span class="wizard-required">*</span></label>
+                    <select class="form-select" id="storageType" name="StorageType" required>
+                        <option value="AzureBlob" selected>Azure Blob Storage</option>
+                        <option value="AmazonS3">Amazon S3</option>
+                        <option value="CloudflareR2">Cloudflare R2</option>
+                    </select>
+                </div>
+
+                <div id="storageHint" class="wizard-alert wizard-alert-info mb-3">
+                    Connection string is already set and cannot be changed.
+                </div>
+
+                <div class="mb-3">
+                    <label class="wizard-form-label" for="connectionString">Connection String <span class="wizard-required">*</span></label>
+                    <input id="connectionString" name="StorageConnectionString" class="form-control font-monospace" type="text" value="***********************" readonly>
+                </div>
+
+                <div id="providerHelp" class="wizard-alert wizard-alert-note mb-3">
+                    Azure Blob format example: <code>DefaultEndpointsProtocol=https;AccountName=youraccount;AccountKey=yourkey</code>
+                </div>
+
+                <div class="mb-0">
+                    <label class="wizard-form-label" for="blobPublicUrl">Public URL <span class="wizard-required">*</span></label>
+                    <input id="blobPublicUrl" name="BlobPublicUrl" class="form-control" type="url" value="/" required>
+                    <small class="form-text">Use <code>/</code> for static websites or your CDN URL.</small>
+                </div>
+
+                <div class="wizard-actions">
+                    <a href="@Url.Page("./Welcome")" class="btn btn-sky-secondary"><i class="fa-solid fa-arrow-left me-1"></i>Back</a>
+                    <a href="@Url.Page("./Admin")" class="btn btn-sky-primary">Next <i class="fa-solid fa-arrow-right ms-1"></i></a>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
+
+@section Scripts {
+    <script src="~/js/wizard-storage.js"></script>
+}

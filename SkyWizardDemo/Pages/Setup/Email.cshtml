@@ -1,0 +1,84 @@
+@page
+@{
+    Layout = "_LayoutSetup";
+    ViewData["Title"] = "SkyCMS Setup - Email";
+    ViewData["BodyId"] = "wizard-step-email";
+    ViewData["BodyClass"] = "wizard-theme wizard-step-email";
+}
+
+@await Html.PartialAsync("_WizardProgress", 4)
+
+<main>
+    <h1 class="wizard-title">Email Configuration</h1>
+    <p class="wizard-subtitle">Configure email services for notifications and user management (optional).</p>
+
+    <div class="wizard-alert wizard-alert-info mb-4">
+        <strong><i class="fa-solid fa-circle-info me-1"></i>Optional Step:</strong>
+        Email configuration is not required to complete setup. You can skip this step and configure email later.
+    </div>
+
+    <section class="wizard-card">
+        <div class="wizard-card-head">Email Provider</div>
+        <div class="wizard-card-body">
+            <form id="emailForm" method="post" novalidate data-next-url="@Url.Page("./Cdn")">
+                <div class="mb-3">
+                    <label class="wizard-form-label" for="senderEmail">Sender Email Address <span class="wizard-required provider-required">*</span></label>
+                    <input id="senderEmail" name="SenderEmail" type="email" class="form-control" placeholder="my-name@example.com">
+                </div>
+
+                <div class="mb-3">
+                    <label class="wizard-form-label" for="emailProvider">Select Email Provider</label>
+                    <select id="emailProvider" name="EmailProvider" class="form-select">
+                        <option value="none" selected>-- Skip Email Configuration (not for production) --</option>
+                        <option value="SendGrid">SendGrid</option>
+                        <option value="AzureCommunication">Azure Communication Services</option>
+                        <option value="SMTP">SMTP Server</option>
+                    </select>
+                </div>
+
+                <div id="sendGridOptions" class="wizard-hidden mb-3">
+                    <div class="wizard-alert wizard-alert-note mb-2">SendGrid is a popular email service with a generous free tier.</div>
+                    <label class="wizard-form-label" for="sendGridApiKey">SendGrid API Key <span class="wizard-required provider-required">*</span></label>
+                    <input id="sendGridApiKey" name="SendGridApiKey" type="password" class="form-control font-monospace">
+                </div>
+
+                <div id="azureCommOptions" class="wizard-hidden mb-3">
+                    <div class="wizard-alert wizard-alert-note mb-2">Azure Communication Services is an enterprise email service from Microsoft.</div>
+                    <label class="wizard-form-label" for="azureConnectionString">Connection String <span class="wizard-required provider-required">*</span></label>
+                    <textarea id="azureConnectionString" name="AzureEmailConnectionString" class="form-control font-monospace" rows="2"></textarea>
+                </div>
+
+                <div id="smtpOptions" class="wizard-hidden">
+                    <div class="wizard-alert wizard-alert-note mb-2">Use any SMTP server (Gmail, Outlook, custom mail server).</div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="wizard-form-label" for="smtpHost">SMTP Host <span class="wizard-required provider-required">*</span></label>
+                            <input id="smtpHost" name="SmtpHost" type="text" class="form-control" placeholder="smtp.gmail.com">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="wizard-form-label" for="smtpPort">SMTP Port <span class="wizard-required provider-required">*</span></label>
+                            <input id="smtpPort" name="SmtpPort" type="number" class="form-control" value="587">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="wizard-form-label" for="smtpUsername">Username <span class="wizard-required provider-required">*</span></label>
+                            <input id="smtpUsername" name="SmtpUsername" type="text" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="wizard-form-label" for="smtpPassword">Password <span class="wizard-required provider-required">*</span></label>
+                            <input id="smtpPassword" name="SmtpPassword" type="password" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="wizard-actions">
+                    <a href="@Url.Page("./Publisher")" class="btn btn-sky-secondary"><i class="fa-solid fa-arrow-left me-1"></i>Back</a>
+                    <button type="submit" class="btn btn-sky-primary">Next <i class="fa-solid fa-arrow-right ms-1"></i></button>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
+
+@section Scripts {
+    <script src="~/js/wizard-email.js"></script>
+}

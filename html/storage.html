@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SkyCMS Setup - Storage</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+  <link href="../theme/css/sky-hero-d.css" rel="stylesheet">
+</head>
+
+<body id="wizard-step-storage" class="wizard-theme wizard-step-storage">
+  <div class="wizard-shell container-fluid">
+    <header class="wizard-brand">
+      <div class="wizard-brand-mark">
+        <img src="../img/Logomark.svg" alt="SkyCMS logo" class="wizard-logo">
+        <span>SkyCMS</span>
+      </div>
+    </header>
+
+    <nav aria-label="Setup progress">
+      <ol class="wizard-steps">
+        <li class="wizard-step is-complete">Welcome</li>
+        <li class="wizard-step is-active">Storage</li>
+        <li class="wizard-step">Admin</li>
+        <li class="wizard-step">Publisher</li>
+        <li class="wizard-step">Email</li>
+        <li class="wizard-step">CDN</li>
+        <li class="wizard-step">Review</li>
+      </ol>
+      <div class="wizard-progress-track">
+        <span class="wizard-progress-fill" style="width: 28.57%;"></span>
+      </div>
+    </nav>
+
+    <main>
+      <h1 class="wizard-title">Storage Configuration</h1>
+      <p class="wizard-subtitle">Configure your cloud storage for static assets.</p>
+
+      <section class="wizard-card">
+        <div class="wizard-card-head">Storage Provider</div>
+        <div class="wizard-card-body">
+          <form id="storageForm" novalidate>
+            <div class="mb-3">
+              <label class="wizard-form-label" for="storageType">Select Storage Type <span class="wizard-required">*</span></label>
+              <select class="form-select" id="storageType" name="storageType" required>
+                <option value="AzureBlob" selected>Azure Blob Storage</option>
+                <option value="AmazonS3">Amazon S3</option>
+                <option value="CloudflareR2">Cloudflare R2</option>
+              </select>
+            </div>
+
+            <div id="storageHint" class="wizard-alert wizard-alert-info mb-3">
+              Connection string is already set and cannot be changed.
+            </div>
+
+            <div class="mb-3">
+              <label class="wizard-form-label" for="connectionString">Connection String <span class="wizard-required">*</span></label>
+              <input id="connectionString" name="connectionString" class="form-control font-monospace" type="text" value="***********************" readonly>
+            </div>
+
+            <div id="providerHelp" class="wizard-alert wizard-alert-note mb-3">
+              Azure Blob format example: <code>DefaultEndpointsProtocol=https;AccountName=youraccount;AccountKey=yourkey</code>
+            </div>
+
+            <div class="mb-0">
+              <label class="wizard-form-label" for="blobPublicUrl">Public URL <span class="wizard-required">*</span></label>
+              <input id="blobPublicUrl" name="blobPublicUrl" class="form-control" type="url" value="/" required>
+              <small class="form-text">Use <code>/</code> for static websites or your CDN URL.</small>
+            </div>
+
+            <div class="wizard-actions">
+              <a href="./welcome.html" class="btn btn-sky-secondary"><i class="fa-solid fa-arrow-left me-1"></i>Back</a>
+              <a href="./admin.html" class="btn btn-sky-primary">Next <i class="fa-solid fa-arrow-right ms-1"></i></a>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/wizard-storage.js"></script>
+</body>
+
+</html>

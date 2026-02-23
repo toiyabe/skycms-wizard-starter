@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SkyCMS Setup - CDN</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+  <link href="../theme/css/sky-hero-d.css" rel="stylesheet">
+</head>
+
+<body id="wizard-step-cdn" class="wizard-theme wizard-step-cdn">
+  <div class="wizard-shell container-fluid">
+    <header class="wizard-brand">
+      <div class="wizard-brand-mark">
+        <img src="../img/Logomark.svg" alt="SkyCMS logo" class="wizard-logo">
+        <span>SkyCMS</span>
+      </div>
+    </header>
+
+    <nav aria-label="Setup progress">
+      <ol class="wizard-steps">
+        <li class="wizard-step is-complete">Welcome</li>
+        <li class="wizard-step is-complete">Storage</li>
+        <li class="wizard-step is-complete">Admin</li>
+        <li class="wizard-step is-complete">Publisher</li>
+        <li class="wizard-step is-complete">Email</li>
+        <li class="wizard-step is-active">CDN</li>
+        <li class="wizard-step">Review</li>
+      </ol>
+      <div class="wizard-progress-track">
+        <span class="wizard-progress-fill" style="width: 85.71%;"></span>
+      </div>
+    </nav>
+
+    <main>
+      <h1 class="wizard-title">CDN Configuration</h1>
+      <p class="wizard-subtitle">Configure a Content Delivery Network for cache management (optional).</p>
+
+      <div class="wizard-alert wizard-alert-info mb-4">
+        <strong><i class="fa-solid fa-circle-info me-1"></i>Optional Configuration:</strong>
+        You can skip this step and configure CDN later through the admin panel.
+      </div>
+
+      <section class="wizard-card">
+        <div class="wizard-card-head"><i class="fa-solid fa-network-wired me-2"></i>Select CDN Provider</div>
+        <div class="wizard-card-body">
+          <form id="cdnForm" novalidate>
+            <div class="mb-3">
+              <label class="wizard-form-label" for="cdnProvider">CDN Provider</label>
+              <select id="cdnProvider" name="cdnProvider" class="form-select">
+                <option value="None" selected>None - Skip CDN Configuration</option>
+                <option value="Azure">Azure CDN / Front Door</option>
+                <option value="Cloudflare">Cloudflare</option>
+                <option value="Cloudfront">CloudFront</option>
+                <option value="Sucuri">Sucuri WAF/CDN</option>
+              </select>
+              <small class="form-text">Select a CDN provider or choose "None" to skip this step.</small>
+            </div>
+
+            <div id="azureConfig" class="wizard-hidden mb-3">
+              <div class="row g-3">
+                <div class="col-md-6"><input class="form-control" id="azureSubscriptionId" placeholder="Subscription ID"></div>
+                <div class="col-md-6"><input class="form-control" id="azureResourceGroup" placeholder="Resource Group"></div>
+                <div class="col-md-6"><input class="form-control" id="azureProfileName" placeholder="Profile Name"></div>
+                <div class="col-md-6"><input class="form-control" id="azureEndpointName" placeholder="Endpoint Name"></div>
+              </div>
+            </div>
+
+            <div id="cloudflareConfig" class="wizard-hidden mb-3">
+              <div class="row g-3">
+                <div class="col-md-6"><input class="form-control" id="cloudflareApiToken" type="password" placeholder="Cloudflare API Token"></div>
+                <div class="col-md-6"><input class="form-control" id="cloudflareZoneId" placeholder="Cloudflare Zone ID"></div>
+              </div>
+            </div>
+
+            <div id="cloudfrontConfig" class="wizard-hidden mb-3">
+              <div class="row g-3">
+                <div class="col-md-4"><input class="form-control" id="cloudFrontAccessKeyId" placeholder="Access Key ID"></div>
+                <div class="col-md-4"><input class="form-control" id="cloudFrontSecretAccessKey" type="password" placeholder="Secret Access Key"></div>
+                <div class="col-md-4"><input class="form-control" id="cloudFrontDistributionId" placeholder="Distribution ID"></div>
+              </div>
+            </div>
+
+            <div id="sucuriConfig" class="wizard-hidden mb-3">
+              <div class="row g-3">
+                <div class="col-md-6"><input class="form-control" id="sucuriApiKey" type="password" placeholder="Sucuri API Key"></div>
+                <div class="col-md-6"><input class="form-control" id="sucuriApiSecret" type="password" placeholder="Sucuri API Secret"></div>
+              </div>
+            </div>
+
+            <div class="wizard-actions">
+              <a href="./email.html" class="btn btn-sky-secondary"><i class="fa-solid fa-arrow-left me-1"></i>Back</a>
+              <button type="submit" class="btn btn-sky-primary">Save &amp; Continue <i class="fa-solid fa-arrow-right ms-1"></i></button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/wizard-cdn.js"></script>
+</body>
+
+</html>
