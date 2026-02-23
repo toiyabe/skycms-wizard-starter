@@ -1,0 +1,18 @@
+@model int
+@{
+    var steps = new[] { "Welcome", "Storage", "Admin", "Publisher", "Email", "CDN", "Review" };
+    var percent = ((Model + 1d) / steps.Length) * 100d;
+}
+
+<nav aria-label="Setup progress">
+    <ol class="wizard-steps">
+        @for (var i = 0; i < steps.Length; i++)
+        {
+            var stateClass = i < Model ? "is-complete" : i == Model ? "is-active" : string.Empty;
+            <li class="wizard-step @stateClass">@steps[i]</li>
+        }
+    </ol>
+    <div class="wizard-progress-track">
+        <span class="wizard-progress-fill" style="width: @percent.ToString("0.##")%;"></span>
+    </div>
+</nav>

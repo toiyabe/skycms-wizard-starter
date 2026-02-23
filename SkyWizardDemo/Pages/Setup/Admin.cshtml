@@ -1,0 +1,63 @@
+@page
+@{
+    Layout = "_LayoutSetup";
+    ViewData["Title"] = "SkyCMS Setup - Admin";
+    ViewData["BodyId"] = "wizard-step-admin";
+    ViewData["BodyClass"] = "wizard-theme wizard-step-admin";
+}
+
+@await Html.PartialAsync("_WizardProgress", 2)
+
+<main>
+    <h1 class="wizard-title">Create Administrator Account</h1>
+    <p class="wizard-subtitle">Set up the initial administrator account for your SkyCMS installation.</p>
+
+    <section class="wizard-card">
+        <div class="wizard-card-head">Administrator Credentials</div>
+        <div class="wizard-card-body">
+            <form id="adminForm" method="post" novalidate data-next-url="@Url.Page("./Publisher")">
+                <div class="mb-3">
+                    <label class="wizard-form-label" for="adminEmail">Email Address <span class="wizard-required">*</span></label>
+                    <input id="adminEmail" name="AdminEmail" class="form-control" type="email" placeholder="my-name@example.com" required>
+                    <small class="form-text">This will be your username for logging in.</small>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="wizard-form-label" for="adminPassword">Password <span class="wizard-required">*</span></label>
+                            <input id="adminPassword" name="AdminPassword" class="form-control" type="password" required>
+                        </div>
+                        <div class="mb-1">
+                            <label class="wizard-form-label" for="confirmPassword">Confirm Password <span class="wizard-required">*</span></label>
+                            <input id="confirmPassword" name="ConfirmPassword" class="form-control" type="password" required>
+                        </div>
+                        <small id="passwordMatch" class="form-text"></small>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <p class="mb-2">Password must include:</p>
+                        <ul class="wizard-list" id="passwordRules">
+                            <li id="ruleLength">At least 8 characters</li>
+                            <li id="ruleUpper">One uppercase letter</li>
+                            <li id="ruleLower">One lowercase letter</li>
+                            <li id="ruleNumber">One number</li>
+                            <li id="ruleSpecial">One special character (!@@#$%^&*)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="wizard-actions">
+                    <a href="@Url.Page("./Storage")" class="btn btn-sky-secondary"><i class="fa-solid fa-arrow-left me-1"></i>Back</a>
+                    <button id="adminNextBtn" type="submit" class="btn btn-sky-primary" disabled>
+                        Next <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
+
+@section Scripts {
+    <script src="~/js/wizard-admin.js"></script>
+}

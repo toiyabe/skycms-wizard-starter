@@ -1,0 +1,74 @@
+@page
+@{
+    Layout = "_LayoutSetup";
+    ViewData["Title"] = "SkyCMS Setup - Review";
+    ViewData["BodyId"] = "wizard-step-review";
+    ViewData["BodyClass"] = "wizard-theme wizard-step-review";
+
+    var summarySections = new[]
+    {
+new { Title = "Storage", Items = new[] {
+new { Label = "Provider", Value = "Azure Blob Storage" },
+new { Label = "Connection", Value = "Pre-configured" },
+new { Label = "Public URL", Value = "/" }
+}},
+new { Title = "Administrator", Items = new[] {
+new { Label = "Email", Value = "admin@example.com" },
+new { Label = "Password", Value = "Strong and confirmed" }
+}},
+new { Title = "Publisher", Items = new[] {
+new { Label = "Website URL", Value = "https://www.example.com" },
+new { Label = "Design", Value = "Bootstrap 5 design" },
+new { Label = "Static Website Mode", Value = "Enabled" }
+}},
+new { Title = "Optional Services", Items = new[] {
+new { Label = "Email", Value = "Skipped" },
+new { Label = "CDN", Value = "Skipped" }
+}}
+};
+
+}
+
+
+@await Html.PartialAsync("_WizardProgress", 6)
+
+<main>
+    <h1 class="wizard-title">Review &amp; Finish</h1>
+    <p class="wizard-subtitle">Confirm your setup details and complete the initial SkyCMS configuration.</p>
+
+    <section class="wizard-card">
+        <div class="wizard-card-head">Configuration Summary</div>
+        <div class="wizard-card-body">
+            <div class="row g-3 mb-3">
+                @foreach (var st in summarySections)
+                {
+                    <div class="col-md-6">
+                        <article class="wizard-tile h-100">
+                            <h4>@st.Title</h4>
+                            <ul class="wizard-list mb-0">
+                                @foreach (var item in st.Items)
+                                {
+                                    <li><strong>@item.Label:</strong> @item.Value</li>
+                                }
+                            </ul>
+                        </article>
+                    </div>
+                }
+            </div>
+
+            <div class="wizard-alert wizard-alert-note mb-3">
+                <strong><i class="fa-solid fa-shield-halved me-1"></i>Security reminder:</strong>
+                Store secrets (API keys, connection strings) in a secure secrets provider for production.
+            </div>
+
+            <div class="wizard-actions">
+                <a href="@Url.Page("./Cdn")" class="btn btn-sky-secondary"><i class="fa-solid fa-arrow-left me-1"></i>Back</a>
+                <a href="@Url.Page("./Welcome")" class="btn btn-sky-primary">Finish Setup <i class="fa-solid fa-check ms-1"></i></a>
+            </div>
+        </div>
+    </section>
+</main>
+
+@section Scripts {
+    // Review step specific scripts can be added here if needed
+}

@@ -1,0 +1,102 @@
+@page
+@{
+    Layout = "_LayoutSetup";
+    ViewData["Title"] = "SkyCMS Setup - Publisher";
+    ViewData["BodyId"] = "wizard-step-publisher";
+    ViewData["BodyClass"] = "wizard-theme wizard-step-publisher";
+
+    var websiteNameExamples = new[]
+    {
+new
+{
+Category = "Company names",
+Items = new[] { "ACME, Corp.", "Central Perk Coffee", "Gotham Press", "Dunder Mifflin Paper Company" }
+},
+new
+{
+Category = "Personal names",
+Items = new[] { "Biography of James Bond", "Peter Parker's Blog", "Incantations by Harry Potter", "The Matrix Explained by Neo" }
+},
+new
+{
+Category = "Topical names",
+Items = new[] { "Baking for Everyone", "Bike Repair 101", "Travel on a Budget", "Zoos and Wildlife Parks" }
+}
+};
+
+    var allowedFileTypes = new[]
+    {
+".js", ".css", ".htm", ".html", ".mov", ".webm", ".avi", ".mp4", ".mpeg", ".ts", ".svg", ".json"
+};
+
+    var allowedFileTypesText = string.Join(",", allowedFileTypes);
+}
+
+@await Html.PartialAsync("_WizardProgress", 3)
+
+<main>
+    <h1 class="wizard-title">Website Configuration</h1>
+    <p class="wizard-subtitle">Configure your website public settings.</p>
+
+    <section class="wizard-card">
+        <div class="wizard-card-head">Website Settings</div>
+        <div class="wizard-card-body">
+            <form id="publisherForm" method="post" novalidate>
+                <div class="mb-3">
+                    <label class="wizard-form-label" for="publisherUrl">Website URL <span class="wizard-required">*</span></label>
+                    <input id="publisherUrl" name="PublisherUrl" class="form-control" type="url" placeholder="https://www.example.com" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="wizard-form-label" for="siteDesignId">Choose a site design</label>
+                    <select id="siteDesignId" name="SiteDesignId" class="form-select">
+                        <option value="1" selected>1. Bootstrap 5 design</option>
+                        <option value="2">2. Editorial style design</option>
+                        <option value="3">3. Clean portfolio design</option>
+                    </select>
+                    <small class="form-text">You can change this later. Current starter designs are available on GitHub.</small>
+                </div>
+
+                <div class="mb-3">
+                    <label class="wizard-form-label" for="websiteTitle">Website Title <span class="wizard-required">*</span></label>
+                    <input id="websiteTitle" name="WebsiteTitle" class="form-control" type="text" placeholder="Central Perk Coffee" required>
+                </div>
+
+                <div class="wizard-tile mb-3">
+                    <h4 class="mb-3">Website name examples</h4>
+                    <div class="row g-2">
+                        @foreach (var exampleGroup in websiteNameExamples)
+                        {
+                            <div class="col-md-4">
+                                <strong>@exampleGroup.Category</strong>
+                                <ul class="wizard-list mt-2">
+                                    @foreach (var item in exampleGroup.Items)
+                                    {
+                                        <li>@item</li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="staticWebPages" name="StaticWebPages" checked disabled>
+                    <label class="form-check-label" for="staticWebPages"><strong>Static Website Mode</strong></label>
+                    <small class="form-text d-block">Generate static HTML files for maximum performance and scalability.</small>
+                </div>
+
+                <div class="mb-2">
+                    <label class="wizard-form-label" for="allowedFileTypes">Allowed File Types <span class="wizard-required">*</span></label>
+                    <input id="allowedFileTypes" name="AllowedFileTypes" class="form-control font-monospace" type="text" value="@allowedFileTypesText" required>
+                    <small class="form-text">Comma-separated list of file extensions allowed for upload.</small>
+                </div>
+
+                <div class="wizard-actions">
+                    <a href="@Url.Page("./Admin")" class="btn btn-sky-secondary"><i class="fa-solid fa-arrow-left me-1"></i>Back</a>
+                    <a href="@Url.Page("./Email")" class="btn btn-sky-primary">Next <i class="fa-solid fa-arrow-right ms-1"></i></a>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>

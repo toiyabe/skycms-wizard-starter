@@ -1,0 +1,59 @@
+@page
+@{
+    Layout = "_LayoutSetup";
+    ViewData["Title"] = "SkyCMS Setup - Welcome";
+    ViewData["BodyId"] = "wizard-step-welcome";
+    ViewData["BodyClass"] = "wizard-theme wizard-step-welcome";
+}
+
+@await Html.PartialAsync("_WizardProgress", 0)
+
+<main>
+    <h1 class="wizard-title text-center">Welcome to SkyCMS Setup Wizard</h1>
+    <p class="wizard-subtitle text-center mx-auto">
+        This wizard will guide you through the initial setup of your SkyCMS installation.
+    </p>
+    <p class="text-center mb-4">
+        SkyCMS is open source software.
+        <a href="https://github.com" target="_blank" rel="noopener">View on GitHub</a>
+    </p>
+
+    <section class="wizard-card">
+        <div class="wizard-card-body">
+            <div class="row g-3 mb-3">
+                <div class="col-lg-6">
+                    <article class="wizard-tile h-100">
+                        <h4><i class="fa-solid fa-circle-info me-2 text-primary"></i>Before You Begin</h4>
+                        <p class="mb-2">Please have the following details ready before continuing:</p>
+                        <ul class="wizard-list">
+                            <li><strong>Administrator Email &amp; Password</strong> for your first admin user</li>
+                            <li><strong>Publisher URL</strong> for your public website</li>
+                            <li><strong>Email service credentials</strong> (optional)</li>
+                        </ul>
+                    </article>
+                </div>
+                <div class="col-lg-6">
+                    <article class="wizard-tile h-100">
+                        <h4><i class="fa-solid fa-circle-check me-2 text-success"></i>Already Set Up</h4>
+                        <ul class="wizard-list wizard-checklist mb-0">
+                            <li class="done">Database connection is pre-configured</li>
+                            <li class="done">Storage is pre-configured</li>
+                        </ul>
+                    </article>
+                </div>
+            </div>
+
+            <article class="wizard-alert wizard-alert-note mb-3">
+                <h4 class="mb-1">Security Note</h4>
+                <p class="mb-0">The database connection string must be configured before running in production.</p>
+            </article>
+
+            <div class="wizard-actions">
+                <a href="/" class="btn btn-sky-secondary">Cancel</a>
+                <a href="@Url.Page("./Storage")" class="btn btn-sky-primary">
+                    Start Setup <i class="fa-solid fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+</main>

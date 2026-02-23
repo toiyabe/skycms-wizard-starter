@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SkyCMS Setup - Review</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+  <link href="../theme/css/sky-hero-d.css" rel="stylesheet">
+</head>
+
+<body id="wizard-step-review" class="wizard-theme wizard-step-review">
+  <div class="wizard-shell container-fluid">
+    <header class="wizard-brand">
+      <div class="wizard-brand-mark">
+        <img src="../img/Logomark.svg" alt="SkyCMS logo" class="wizard-logo">
+        <span>SkyCMS</span>
+      </div>
+    </header>
+
+    <nav aria-label="Setup progress">
+      <ol class="wizard-steps">
+        <li class="wizard-step is-complete">Welcome</li>
+        <li class="wizard-step is-complete">Storage</li>
+        <li class="wizard-step is-complete">Admin</li>
+        <li class="wizard-step is-complete">Publisher</li>
+        <li class="wizard-step is-complete">Email</li>
+        <li class="wizard-step is-complete">CDN</li>
+        <li class="wizard-step is-active">Review</li>
+      </ol>
+      <div class="wizard-progress-track">
+        <span class="wizard-progress-fill" style="width: 100%;"></span>
+      </div>
+    </nav>
+
+    <main>
+      <h1 class="wizard-title">Review &amp; Finish</h1>
+      <p class="wizard-subtitle">Confirm your setup details and complete the initial SkyCMS configuration.</p>
+
+      <section class="wizard-card">
+        <div class="wizard-card-head">Configuration Summary</div>
+        <div class="wizard-card-body">
+          <div class="row g-3 mb-3">
+            <!-- Content will be dynamically rendered by wizard-review.js -->
+          </div>
+
+          <div class="wizard-alert wizard-alert-note mb-3">
+            <strong><i class="fa-solid fa-shield-halved me-1"></i>Security reminder:</strong>
+            Store secrets (API keys, connection strings) in a secure secrets provider for production.
+          </div>
+
+          <div class="wizard-actions">
+            <a href="./cdn.html" class="btn btn-sky-secondary"><i class="fa-solid fa-arrow-left me-1"></i>Back</a>
+            <a href="./welcome.html" class="btn btn-sky-primary">Finish Setup <i class="fa-solid fa-check ms-1"></i></a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/wizard-review.js"></script>
+</body>
+
+</html>
