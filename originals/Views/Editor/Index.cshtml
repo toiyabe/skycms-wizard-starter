@@ -1,0 +1,268 @@
+@using Sky.Editor.Data.Logic
+@using Sky.Editor.Services.EditorSettings
+@inject IEditorSettings options
+@{
+    ViewData["Title"] = "Web Page Inventory";
+
+    var isReviewer = User.IsInRole("Reviewers");
+    var canEdit = User.IsInRole("Administrators") || User.IsInRole("Editors");
+
+    var homeArticleNumber = (int)ViewData["HomePageArticleNumber"];
+    var showFirstPageBtn = (bool)ViewData["ShowFirstPageBtn"];
+    var showNotFoundBtn = (bool)ViewData["ShowNotFoundBtn"];
+
+}
+<link href="~/lib/tabulator-tables/dist/css/tabulator_midnight.css" rel="stylesheet" />
+<script src="~/lib/luxon/luxon.min.js"></script>
+<script src="~/lib/tabulator-tables/dist/js/tabulator.min.js"></script>
+<script src="~/js/clipboard.min.js"></script>
+<style>
+    .fs-small {
+        font-size: 0.8em;
+    }
+</style>
+
+<div class="pt-3">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h3 class="text-light">@ViewData["Title"]</h3>
+                @if (showFirstPageBtn)
+                {
+                    <a class="btn btn-sm btn-primary" title="Create website home page" href="/Editor/Create">Create Home Page <i class="fa-solid fa-circle-arrow-right"></i></a>
+                }
+                @if (showFirstPageBtn == false && showFirstPageBtn)
+                {
+                    <a class="btn btn-sm btn-primary" title="Create a custom page when a user makes a request that cannot be found." href="/Editor/Create?title=Not%20Found">Create Not Found Page<i class="fa-solid fa-circle-arrow-right"></i></a>
+                }
+            </div>
+        </div>
+        <div class="row cpws-table-pager-row-top">
+            <div class="col-md-6">
+                @if (!isReviewer)
+                {
+                    <div class="btn-group" role="group" aria-label="Actions">
+                        <a asp-action="Versions" asp-route-id="@homeArticleNumber" title="Edit home page" class="btn btn-sm btn-success">Edit home page</a>
+                        <a class="btn btn-sm btn-primary" title="Create a new web page" asp-action="Create">New Page</a>
+                        <a class="btn btn-sm btn-secondary" title="Create a new web page" asp-action="Index" asp-controller="Templates">Templates</a>
+                        <a title="Manage redirects" class="btn btn-sm btn-secondary" asp-action="Redirects">Redirects</a>
+                        <a title="Manage site design" class="btn btn-sm btn-secondary" asp-action="Index" asp-controller="Layouts">Site Design</a>
+                        <a title="Manage reserved paths" class="btn btn-sm btn-secondary" asp-action="ReservedPaths" asp-controller="Editor">Reserved Paths</a>
+                        <a title="Manage trash" class="btn btn-sm btn-secondary" asp-action="Trash">Trash</a>
+                    </div>
+                }
+            </div>
+            <div class="col-md-6 d-flex justify-content-end">
+            </div>
+        </div>
+
+        <div class="row bg-dark">
+            <div class="col-md-12">
+                <div id="pagelist-table" class="table-dark"></div>
+            </div>
+        </div>
+
+        <div class="row cpws-table-pager-row-bottom">
+            <div class="col-md-12 d-flex justify-content-center">
+                &nbsp;
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    const publisherUrl = "@options.PublisherUrl.TrimEnd('/')";
+    const tblHeight = window.innerHeight - 200;
+    let pageSize = Math.round(tblHeight / 50) + 1;
+
+    function dateTime(cell, formatterParams, onRendered){
+        //cell - the cell component
+        //formatterParams - parameters set for the column
+        //onRendered - function to call when the formatter has been rendered
+        return getLocalTime(cell.getValue());
+    }
+
+    function dateFilterFunction(headerValue, rowValue, rowData, filterParams){
+        if (rowValue === null || rowValue === "") {
+            return false;
+        }
+        return headerValue === rowValue.split("T")[0]; //must return a boolean, true if it passes the filter.
+    }
+
+    async function sendToTrash(articleNumber) {
+        const result = await fetch("@Url.Action("TrashArticle", "Editor")/" + articleNumber);
+        if (result.ok) {
+            pageTable.setData();
+        }
+    }
+
+    function openArticleVersions(e, cell) {
+        const data = cell.getRow().getData();
+        window.location.href = "@Url.Action("Versions")/" + data.ArticleNumber;
+    }
+
+    function unpublish(articleNumber) {
+        const data = cell.getRow().getData();
+        $.get("@Url.Action("UnpublishPage", "Editor")/" + articleNumber, function (data) {
+            pageTable.setData();
+        });
+    }
+
+    const trashBtn = function(cell, formatterParams){
+        data = cell.getRow().getData();
+        if (data.IsDefault === true){
+            return "";
+        }
+        return "<button type='button' title='Send page to trash' onclick='sendToTrash(" + data.ArticleNumber + ", \"" + data.Title + "\")' class='btn btn-sm btn-secondary'><i class='fa-solid fa-trash'></i></button>";
+    };
+
+    const menuBar = function(cell, formatterParams){
+        data = cell.getRow().getData();
+        let html = "<div class='btn-group btn-group-sm' role='group' aria-label='Page actions.'>";
+        html += html += "<a href='/Editor/Versions/" + data.ArticleNumber + "' title='Click to edit page.' class='btn btn-sm btn-success'><i class='fa-solid fa-pen-to-square'></i></a>";
+        let url = data.UrlPath;
+        if (url === "root") {
+            url = "";
+        }
+
+        if (data.LastPublished !== null && data.LastPublished !== ""){
+            html += "<a target='_blank' href='" + publisherUrl + "/" + url + "' title='Open page on website.'  class='btn btn-sm btn-secondary'><i class='fa-solid fa-arrow-up-right-from-square'></i></a>";
+        }
+        else
+        {
+            html += "<a title='Cannot open page on website until it is published.' onclick='alert(\"Cannot open page on website until it is published.\")' class='btn btn-sm btn-secondary'><i class='fa-solid fa-arrow-up-right-from-square'></i></a>";
+        }
+
+        if (data.IsDefault === true){
+            html += "<div title='Current home page.' class='btn btn-sm btn-primary'><i class='fa-solid fa-house'></i></div>";
+        }
+        else if (data.LastPublished !== null && data.LastPublished !== ""){
+            html += "<a href='/Editor/NewHome/" + data.ArticleNumber + "' title='Make this the new home page.' class='btn btn-sm btn-secondary'><i class='fa-solid fa-house'></i></a>";
+        }
+        else
+        {
+            html += "<a title='Cannot make this the new home page until it is published.' onclick='alert(\"Cannot make this the home until it is published.\")' class='btn btn-sm btn-secondary'><i class='fa-solid fa-house'></i></a>";
+        }
+
+        html += "<a class='btn btn-sm btn-secondary' title='Create a clone of this page' href='/Editor/Clone/" + data.ArticleNumber + "'><i class='fa-solid fa-copy'></i></a>";
+
+        if (data.LastPublished !== null && canEdit && data.IsDefault === false)
+        {
+            html += "<button onclick='unpublish(" + data.ArticleNumber + ")' title='Unpublishes a this item, and makes it no longer accessible except for editing.' class='btn btn-sm btn-secondary'><i class='fa-solid fa-calendar-xmark'></i></button>";
+        }html += "</div>";
+        return html;
+    };
+
+    const pageTable = new Tabulator("#pagelist-table", {
+        height:tblHeight + "px",
+        pagination:true, //enable pagination
+        paginationMode:"local", //enable local pagination
+        paginationSize:pageSize, //optional parameter to request a certain number of rows per page
+        persistence:{
+            sort: true, //persist column sorting
+            filter: true, //persist filters
+            headerFilter: true, //persist header filters
+            group: false, //persist row grouping
+            page: true, //persist page
+            columns: false, //persist columns
+        },
+        persistenceWriterFunc:function(id, type, data){
+            //id - tables persistence id
+            //type - type of data being persisted ("sort", "filter", "group", "page" or "columns")
+            //data - array or object of data
+            sessionStorage.setItem(id + "-" + type, JSON.stringify(data));
+        },
+        persistenceReaderFunc:function(id, type){
+            //id - tables persistence id
+            //type - type of data being persisted ("sort", "filter", "group", "page" or "columns")
+            var data = sessionStorage.getItem(id + "-" + type);
+            return data ? JSON.parse(data) : false;
+        },
+        layout:"fitColumns",
+        ajaxURL:"@Url.Action("GetArticleList", "Editor")?publishedOnly=false", //ajax URL
+        columns:[
+            {title:"UrlPath", field:"UrlPath", visible: false },
+            {title:"No.", field:"ArticleNumber", visible: false },
+
+            {title:"Actions", field:"IsDefault", formatter:menuBar, width:176, headerSort:false },
+
+            {title:"Published",
+                field:"LastPublished",
+                headerFilter:"date",
+                headerFilterFunc:dateFilterFunction,
+                cellClick:openArticleVersions,
+                width:180,
+                sorter:"datetime",
+                sorterParams:{
+                    format:"iso" },
+                formatter:"datetime",
+                formatterParams:{
+                    inputFormat:"iso",
+                    outputFormat:"MM/dd/yyyy HH:mm:ss",
+                    invalidPlaceholder:"(Invalid date)"
+                }
+            },
+
+            {title:"Updated",
+                field:"Updated",
+                headerFilter:"date",
+                headerFilterFunc:dateFilterFunction,
+                cellClick:openArticleVersions,
+                width:180,
+                sorter:"datetime",
+                sorterParams:{
+                    format:"iso" },
+                formatter:"datetime",
+                formatterParams:{
+                    inputFormat:"iso",
+                    outputFormat:"MM/dd/yyyy HH:mm:ss",
+                    invalidPlaceholder:"(Invalid date)"
+                }
+            },
+
+            {title:"Title", field:"Title", sorter:"string", headerFilter:"input", cellClick:openArticleVersions },
+
+            {title: "Trash", field:"ArticleNumber", formatter:trashBtn, width:56, headerSort:false, hozAlign:"center", headerHozAlign:"center" }
+
+        ],
+    });
+
+    const canEdit = @canEdit.ToString().ToLower();
+    const clipboard = new ClipboardJS('.clipboard');
+    clipboard.on('success',
+        function (e) {
+            console.info('Action:', e.action);
+            console.info('Text:', e.text);
+            console.info('Trigger:', e.trigger);
+            alert("Copied: " + e.text);
+            e.clearSelection();
+        });
+
+    var articleNumber;
+    var articleTitle;
+
+    function selectArticle(articleNo, title) {
+        articleNumber = articleNo;
+        $("#articleTitle").html("&quot;" + title + "&quot;");
+        return true;
+    }
+
+    $(document).ready(function () {
+
+        $("body").addClass("cwps-editor-container");
+
+        $(".toLocalTimeZone").each(function (index, element) {
+            $(element).html(getLocalTime($(element).html()));
+        });
+
+        $("#btnCreate").hide();
+
+        $("#btnCreate").click(function (e) {
+            window.location.href = "@Url.Action("Create", "Editor")?title=";
+        });
+
+    });
+
+
+</script>

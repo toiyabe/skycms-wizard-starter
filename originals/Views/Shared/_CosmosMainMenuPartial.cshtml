@@ -1,0 +1,291 @@
+@inject IEditorSettings options
+@using System.Reflection
+@using Cosmos.Cms.Common.Services.Configurations;
+@using Microsoft.Extensions.Options;
+@using Sky.Editor.Data.Logic
+@using Sky.Editor.Services.EditorSettings
+@{
+    var assemblyName = Assembly.GetExecutingAssembly().GetName();
+    var isEditor = false;
+    var isAdministrator = false;
+    var isAuthor = false;
+    var isReviewer = false;
+    var loadList = ViewData["LoadEditList"] as bool? ?? false;
+
+    if (User != null && User.IsInRole("Editors"))
+    {
+        isEditor = true;
+    }
+
+    if (User != null && User.IsInRole("Administrators"))
+    {
+        isAdministrator = true;
+    }
+
+    if (User != null && User.IsInRole("Authors"))
+    {
+        isAuthor = true;
+    }
+
+    if (User != null && User.IsInRole("Reviewers"))
+    {
+        isReviewer = true;
+    }
+}
+<nav id="ccmsNavMenu" class="navbar navbar-expand-sm navbar-dark bg-dark" style="z-index: 20000000;">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+            <img src="~/images/skycms/SkyCMSLogoNoWiTextDarkTransparent30h.png" height="30" />
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                @if (User != null && User.Identity != null && (isAdministrator || isEditor || isAuthor || isReviewer))
+                {
+                    <li class="nav-item dropdown">
+                        <a id="btnManage" href="#" role="button" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            Menu
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" id="ddManageMenu">
+                            <li>
+                                <a class="dropdown-item" title="Website page list." asp-action="Index" asp-controller="Editor">Pages</a>
+                            </li>
+                            <li>
+                                <a id="btnNewPage" class="ms-2 fw-lighter dropdown-item" title="Creates new page using this one as it's parent." style="font-size:inherit.8rem">New page <i class="fa-solid fa-circle-arrow-right"></i></a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" title="Website blog list." href="/Editor/Blogs">Blogs</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" title="Open files stored on this website." href="/FileManager/Index">File Manager</a>
+                            </li>
+                            @if (isAdministrator || isEditor)
+                            {
+                                <li>
+                                    <a class="dropdown-item" title="Manage page templates" href="/Templates/Index">Templates</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" title="Manage layouts" href="/Layouts/Index">Site Design</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" title="Manage customer contacts." asp-action="Index" asp-controller="Cosmos___Contacts">Contacts</a>
+                                </li>
+                                <li>
+                                    <a id="btnPublicWebsite" class="dropdown-item" title="Open public (publisher) website" href="" target="_blank">Public Website</a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" title="Manage user accounts." asp-action="Index" asp-controller="Users">Users</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" title="Publish entire website and refresh CDN." href="/Editor/Publish">Publish Website</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" title="Open page scheduling service." href="/Editor/Scheduler">Page Scheduler</a>
+                                </li>
+                            }
+                            @if (isAdministrator)
+                            {
+                                <li>
+                                    <a class="dropdown-item" title="Website settings." asp-action="Index" asp-controller="Cosmos___Settings">Settings</a>
+                                </li>
+                            }
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item fw-lighter" title="Sky CMS is licensed to users under GNU General Public License Version 3." href="https://github.com/CWALabs/SkyCMS?tab=GPL-3.0-1-ov-file#readme" target="_blank">User License</a>
+                            </li>
+                        </ul>
+                    </li>
+                }
+                <li id="editorDropDown" class="nav-item dropdown">
+                    <a id="navbarEditDropdown" onclick="loadDdEditMenu()" class="nav-link dropdown-toggle" href="#"
+                       role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Edit
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark" id="ddEditMenu">
+                        <li><a class="dropdown-item" href="#">Choose version to edit:</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><span title="Cosmos Version" class="nav-link text-mute">@assemblyName.Version.ToString()</span></li>
+                @if (Context.Request.Path == "/home/preview")
+                {
+                    <li class="nav-item"><a class="btn btn-sm btn-primary mt-2" title="Close preview" href="javascript:closePreview()">Close Preview</a></li>
+                }
+            </ul>
+
+            <div class="d-flex">
+                <partial name="_LoginPartial" />
+            </div>
+        </div>
+    </div>
+</nav>
+<script>
+
+        var isAuthor = @(isAuthor.ToString().ToLower());
+
+        let pageTitle = "";
+        let pagePath = "";
+        let loadList = @loadList.ToString().ToLower();
+
+
+        function closePreview() {
+            if (window.opener) {
+                window.close();
+            } else {
+                location.href = "/Editor/Versions/@Context.Request.Query["ArticleNumber"]";
+            }
+        }
+
+        function loadDdEditMenu() {
+        const ddMenu = $("#ddEditMenu");
+
+        // Check if already loaded (avoid duplicate loading)
+        if (ddMenu.data('loaded')) {
+            return;
+        }
+
+        ddMenu.html("Loading...");
+
+        const iframe = document.getElementById("iFrameWebPage");
+        const iframeWin = iframe.contentWindow || iframe.contentDocument.parentWindow;
+
+        let showEditDropDown = false;
+
+        if (loadList) {
+            // Use fetch API for more robust error handling
+            const apiUrl = `${window.location.origin}/Home/EditList?target=${encodeURIComponent(iframeWin.parent.location.pathname)}`;
+
+            fetch(apiUrl, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                ddMenu.html("");
+
+                if (!data || data.length === 0) {
+                    ddMenu.append("<li><a class='dropdown-item' href='#'>No versions available</a></li>");
+                    $("#editorDropDown").hide();
+                    return;
+                }
+
+                data.forEach((element, index) => {
+                    let div = "<li>";
+                    div += "<div class='dropdown-item'>";
+                    div += "<div class='btn-group btn-group-sm' role='group'>";
+
+                    if (element.Published === null || element.Published === "") {
+                        div += "<span class='badge text-bg-secondary'>v." + element.VersionNumber + " DRAFT</span>";
+                    } else {
+                        const pDate = new Date(element.Published);
+                        const today = new Date();
+
+                        if (pDate > today) {
+                            div += "<span class='badge text-bg-primary'>v." + element.VersionNumber + " Future</span>";
+                        } else {
+                            div += "<span class='badge text-bg-success'>v." + element.VersionNumber + " Published</span>";
+                        }
+                    }
+
+                    if (isAuthor === false) {
+                        showEditDropDown = true;
+                        div += "<a class='btn btn-sm btn-secondary' title='Designer editor' href='/Editor/Designer/" + element.ArticleNumber + "'>Designer</a>";
+                        div += "<a class='btn btn-sm btn-secondary' title='Code editor' href='/Editor/EditCode/" + element.ArticleNumber + "'>Code</a>";
+                        if (element.UsesHtmlEditor === true) {
+                            div += "<a class='btn btn-sm btn-secondary' title='Page editor' href='/Editor/Edit/" + element.ArticleNumber + "'>HTML</a>";
+                        } else {
+                            div += "<a class='btn btn-sm btn-secondary' href='#' style='width:109px;'></a>";
+                        }
+                    }
+
+                    div += "</div>";
+                    div += "</div>";
+                    div += "</li>";
+                    ddMenu.append(div);
+                });
+
+                let endDiv = "<li><hr class='dropdown-divider'></li>";
+                endDiv += "<a class='btn btn-sm btn-secondary ms-3' href='/Editor/Versions/" + data[0].ArticleNumber + "' class='dropdown-item'>All versions <i class='fa-solid fa-circle-right'></i></a>";
+                ddMenu.append(endDiv);
+
+                // Mark as loaded
+                ddMenu.data('loaded', true);
+
+                if (showEditDropDown) {
+                    $("#editorDropDown").show();
+                } else {
+                    $("#editorDropDown").hide();
+                }
+            })
+            .catch(error => {
+                console.error('Error loading edit menu:', error);
+                ddMenu.html("<li><a class='dropdown-item text-danger' href='#'>Error loading versions</a></li>");
+                $("#editorDropDown").hide();
+            });
+        } else {
+            ddMenu.hide();
+            $("#editorDropDown").hide();
+        }
+    }
+
+        function closeDropDowns() {
+            $("#navbarEditDropdown").removeClass("show");
+            $("#ddEditMenu").removeClass("show");
+            $("#btnManage").removeClass("show");
+            $("#ddManageMenu").removeClass("show");
+        }
+
+        $(document).ready(function () {
+            setPublicSiteUrl();
+            if (loadList) {
+                // Don't load automatically - will load on dropdown click
+                $("#editorDropDown").show();
+            } else {
+                $("#ddEditMenu").hide();
+                $("#editorDropDown").hide();
+            }
+        });
+
+        function setPublicSiteUrl() {
+
+            let publicBaseUrl = "@options.PublisherUrl.TrimEnd('/')";
+            const el = document.getElementById("btnPublicWebsite");
+            if (el) {
+                el.setAttribute("href", publicBaseUrl);
+            }
+        }
+</script>
+
+<!-- Modal -->
+<div class="mt-5 modal fade" id="modalContactUs" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-secondary" style="height:700px;">
+            <div class="modal-body">
+                <iframe id="iframeContactSupport" style="position: absolute; height: 100%; width:90%; border: none"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $("#btnGetHelp").click(function () {
+        $("#iframeContactSupport").attr("src", "/Ccms__ContactUs/Index");
+    });
+    $("#btnNewPage").click(function (e) {
+        window.location.href = "@Url.Action("Create", "Editor")";
+    });
+</script>
