@@ -1,0 +1,90 @@
+@* Main navigation menu with role-based access *@
+@{
+    var isEditor = false;      // Demo: Replace with User.IsInRole("Editors")
+    var isAdministrator = false; // Demo: Replace with User.IsInRole("Administrators")
+    var isAuthor = false;      // Demo: Replace with User.IsInRole("Authors")
+    var isReviewer = false;    // Demo: Replace with User.IsInRole("Reviewers")
+}
+
+<nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(135deg, rgba(16, 35, 61, 0.95), rgba(42, 116, 255, 0.85)); backdrop-filter: blur(10px); box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+    <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <img src="~/img/Logomark.svg" alt="SkyCMS" height="30" class="me-2" />
+            <span style="font-weight: 700; background: linear-gradient(90deg, #56c2ff, #fff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">SkyCMS</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" asp-page="/Index">
+                        <i class="fa-solid fa-house me-1"></i> Home
+                    </a>
+                </li>
+                
+                @if (isEditor || isAdministrator || isAuthor)
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-file-lines me-1"></i> Pages
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" asp-page="/PageInventory"><i class="fa-solid fa-list me-2"></i> Page List</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fa-solid fa-plus me-2"></i> New Page</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" asp-page="/TemplateInventory"><i class="fa-solid fa-layer-group me-2"></i> Templates</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fa-solid fa-paintbrush me-2"></i> Site Design</a></li>
+                        </ul>
+                    </li>
+                }
+
+                @if (isEditor || isAdministrator)
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-rocket me-1"></i> Publishing
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" asp-page="/PublishWebsite"><i class="fa-solid fa-globe me-2"></i> Publish Website</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fa-solid fa-clock-rotate-left me-2"></i> Publishing History</a></li>
+                        </ul>
+                    </li>
+                }
+
+                @if (isAdministrator)
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-gear me-1"></i> Settings
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" asp-page="/EditorSetup"><i class="fa-solid fa-sliders me-2"></i> Editor Setup</a></li>
+                            <li><a class="dropdown-item" asp-page="/CdnSetup"><i class="fa-solid fa-network-wired me-2"></i> CDN Setup</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="fa-solid fa-users me-2"></i> User Management</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fa-solid fa-shield-halved me-2"></i> Roles & Permissions</a></li>
+                        </ul>
+                    </li>
+                }
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-wand-magic-sparkles me-1"></i> Setup Wizard
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" asp-page="/Setup/Welcome"><i class="fa-solid fa-hand-wave me-2"></i> Welcome</a></li>
+                        <li><a class="dropdown-item" asp-page="/Setup/Storage"><i class="fa-solid fa-database me-2"></i> Storage</a></li>
+                        <li><a class="dropdown-item" asp-page="/Setup/Admin"><i class="fa-solid fa-user-shield me-2"></i> Admin</a></li>
+                        <li><a class="dropdown-item" asp-page="/Setup/Publisher"><i class="fa-solid fa-globe me-2"></i> Publisher</a></li>
+                        <li><a class="dropdown-item" asp-page="/Setup/Email"><i class="fa-solid fa-envelope me-2"></i> Email</a></li>
+                        <li><a class="dropdown-item" asp-page="/Setup/Cdn"><i class="fa-solid fa-network-wired me-2"></i> CDN</a></li>
+                        <li><a class="dropdown-item" asp-page="/Setup/Review"><i class="fa-solid fa-check-circle me-2"></i> Review</a></li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <partial name="_LoginPartial" />
+        </div>
+    </div>
+</nav>

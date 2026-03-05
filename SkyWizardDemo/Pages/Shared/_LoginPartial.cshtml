@@ -1,0 +1,41 @@
+@* Login/Logout partial for navigation *@
+@{
+    var isSignedIn = false; // Demo: Replace with actual authentication check
+}
+
+@if (isSignedIn)
+{
+    <div class="d-flex align-items-center gap-2">
+        <a class="btn btn-sm btn-sky-secondary" href="mailto:support@moonrise.net?subject=Help Desk" title="Email Help Desk">
+            <i class="fa-solid fa-bell-concierge"></i>
+        </a>
+        <a title="SkyCMS documentation" target="_blank" class="btn btn-sm btn-sky-secondary" href="https://docs.sky-cms.com">
+            <i class="fa-solid fa-circle-info"></i>
+        </a>
+        <a class="btn btn-sm btn-sky-secondary" title="User account settings" asp-page="/Account/Manage/Index">
+            <i class="fa-solid fa-user"></i>
+        </a>
+        <button type="button" title="Log out" onclick="document.getElementById('logoutForm').submit();" class="btn btn-sm btn-sky-primary">
+            <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+        <form id="logoutForm" asp-page="/Account/Logout" method="post" class="d-none">
+        </form>
+    </div>
+}
+else
+{
+    <div class="d-flex align-items-center gap-2">
+        <a class="btn btn-sm btn-sky-secondary" href="mailto:support@moonrise.net?subject=Help Desk" title="Email Help Desk">
+            <i class="fa-solid fa-bell-concierge"></i>
+        </a>
+        <a title="SkyCMS documentation" target="_blank" class="btn btn-sm btn-sky-secondary" href="https://docs.sky-cms.com">
+            <i class="fa-solid fa-circle-info"></i>
+        </a>
+        <a class="btn btn-sm btn-sky-secondary" asp-page="/Account/Register">
+            <i class="fa-solid fa-user-plus me-1"></i> Register
+        </a>
+        <a class="btn btn-sky-primary btn-sm" asp-page="/Account/Login">
+            <i class="fa-solid fa-right-to-bracket me-1"></i> Login
+        </a>
+    </div>
+}
