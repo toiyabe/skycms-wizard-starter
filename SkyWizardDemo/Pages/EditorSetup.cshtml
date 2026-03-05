@@ -1,0 +1,83 @@
+@page
+@{
+    Layout = "_LayoutSetup";
+    ViewData["Title"] = "Editor Setup";
+    ViewData["BodyClass"] = "wizard-theme wizard-step-editor-setup";
+}
+
+<div class="editor-setup-container">
+    <main>
+        <h1 class="wizard-title">Editor Setup</h1>
+        <p class="wizard-subtitle">Configure your website settings</p>
+
+        <div class="wizard-card">
+            <div class="wizard-card-head">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span><i class="fa-solid fa-gear me-2"></i> Configuration Settings</span>
+                    <a href="@Url.Page("/CdnSetup")" class="btn btn-sky-primary btn-sm">
+                        CDN Settings <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="wizard-card-body">
+                <form method="post">
+                    <div class="wizard-alert wizard-alert-info mb-3">
+                        <i class="fa-solid fa-circle-info me-2"></i>
+                        The following settings come from the app service environment variables and cannot be edited here.
+                    </div>
+
+                    <div class="wizard-tile mb-3">
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="staticWebPages" checked disabled>
+                            <label class="form-check-label wizard-form-label" for="staticWebPages">
+                                Static Web Pages
+                            </label>
+                            <div class="form-text">Indicates if static mode is being used.</div>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="requiresAuth" disabled>
+                            <label class="form-check-label wizard-form-label" for="requiresAuth">
+                                Requires Authentication
+                            </label>
+                            <div class="form-text">For static mode this always is set to false.</div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="publisherUrl" class="wizard-form-label">
+                            Publisher URL <span class="wizard-required">*</span>
+                        </label>
+                        <input type="url" class="form-control" id="publisherUrl" value="https://example.com" required>
+                        <div class="form-text">This is your website's URL on the web.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="blobPublicUrl" class="wizard-form-label">
+                            Blob Public URL <span class="wizard-required">*</span>
+                        </label>
+                        <input type="url" class="form-control" id="blobPublicUrl" value="/" required>
+                        <div class="form-text">This is the static asset storage URL for your website.</div>
+                    </div>
+
+                    <div class="wizard-alert wizard-alert-note">
+                        <i class="fa-solid fa-shield-halved me-2"></i>
+                        <strong>Security Note:</strong> Ensure all URLs use HTTPS in production environments.
+                    </div>
+
+                    <div class="wizard-actions mt-4">
+                        <a href="@Url.Page("/Index")" class="btn btn-sky-secondary">
+                            <i class="fa-solid fa-arrow-left me-1"></i> Back
+                        </a>
+                        <button type="submit" class="btn btn-sky-primary">
+                            <i class="fa-solid fa-floppy-disk me-1"></i> Save Settings
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+@section Scripts {
+        <script src="~/js/editor-setup.js"></script>
+}

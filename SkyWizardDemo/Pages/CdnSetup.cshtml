@@ -1,0 +1,154 @@
+@page
+@{
+    Layout = "_LayoutSetup";
+    ViewData["Title"] = "CDN Setup";
+    ViewData["BodyClass"] = "wizard-theme wizard-step-cdn-setup";
+}
+
+<div class="cdn-setup-container">
+    <main>
+        <h1 class="wizard-title">CDN Configuration</h1>
+        <p class="wizard-subtitle">Configure Content Delivery Network settings</p>
+
+        <form method="post">
+            <div class="row g-3 mb-3">
+                <!-- Cloudflare -->
+                <div class="col-lg-4">
+                    <div class="wizard-card h-100">
+                        <div class="wizard-card-head">
+                            <i class="fa-brands fa-cloudflare me-2"></i> Cloudflare
+                        </div>
+                        <div class="wizard-card-body">
+                            <div class="mb-3">
+                                <label for="cfApiToken" class="wizard-form-label">
+                                    API Token <span class="wizard-required">*</span>
+                                </label>
+                                <input type="password" class="form-control" id="cfApiToken" placeholder="Enter API token">
+                            </div>
+                            <div class="mb-3">
+                                <label for="cfZoneId" class="wizard-form-label">
+                                    Zone ID <span class="wizard-required">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="cfZoneId" placeholder="Enter zone ID">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Microsoft Azure -->
+                <div class="col-lg-4">
+                    <div class="wizard-card h-100">
+                        <div class="wizard-card-head">
+                            <i class="fa-brands fa-microsoft me-2"></i> Microsoft Azure
+                        </div>
+                        <div class="wizard-card-body">
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="isFrontDoor">
+                                <label class="form-check-label" for="isFrontDoor">
+                                    Is Azure Front Door
+                                </label>
+                            </div>
+                            <div class="mb-3">
+                                <label for="azSubscriptionId" class="wizard-form-label">Subscription ID</label>
+                                <input type="text" class="form-control" id="azSubscriptionId">
+                            </div>
+                            <div class="mb-3">
+                                <label for="azResourceGroup" class="wizard-form-label">Resource Group</label>
+                                <input type="text" class="form-control" id="azResourceGroup">
+                                <div class="form-text">Resource group where CDN or Front Door is installed.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="azProfileName" class="wizard-form-label">Profile Name</label>
+                                <input type="text" class="form-control" id="azProfileName">
+                            </div>
+                            <div class="mb-3">
+                                <label for="azEndpointName" class="wizard-form-label">Endpoint Name</label>
+                                <input type="text" class="form-control" id="azEndpointName">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sucuri -->
+                <div class="col-lg-4">
+                    <div class="wizard-card h-100">
+                        <div class="wizard-card-head">
+                            <i class="fa-solid fa-shield me-2"></i> Sucuri CDN/Firewall
+                        </div>
+                        <div class="wizard-card-body">
+                            <div class="mb-3">
+                                <label for="sucuriApiKey" class="wizard-form-label">API Key</label>
+                                <input type="password" class="form-control" id="sucuriApiKey">
+                            </div>
+                            <div class="mb-3">
+                                <label for="sucuriApiSecret" class="wizard-form-label">API Secret</label>
+                                <input type="password" class="form-control" id="sucuriApiSecret">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Amazon CloudFront -->
+            <div class="wizard-card">
+                <div class="wizard-card-head" style="background: rgba(255, 153, 0, 0.1); border-bottom-color: rgba(255, 153, 0, 0.3);">
+                    <i class="fa-brands fa-aws me-2"></i> Amazon CloudFront CDN
+                </div>
+                <div class="wizard-card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="cfDistributionId" class="wizard-form-label">Distribution ID</label>
+                            <input type="text" class="form-control" id="cfDistributionId" placeholder="E1234567890ABC">
+                            <div class="form-text">Your CloudFront distribution ID (found in AWS Console)</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="awsRegion" class="wizard-form-label">AWS Region</label>
+                            <select class="form-select" id="awsRegion">
+                                <option value="us-east-1">US East (N. Virginia) - us-east-1</option>
+                                <option value="us-east-2">US East (Ohio) - us-east-2</option>
+                                <option value="us-west-1">US West (N. California) - us-west-1</option>
+                                <option value="us-west-2">US West (Oregon) - us-west-2</option>
+                                <option value="eu-west-1">EU (Ireland) - eu-west-1</option>
+                                <option value="eu-central-1">EU (Frankfurt) - eu-central-1</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="awsAccessKey" class="wizard-form-label">AWS Access Key ID</label>
+                            <input type="text" class="form-control" id="awsAccessKey" placeholder="AKIAIOSFODNN7EXAMPLE">
+                            <div class="form-text">AWS IAM user access key with CloudFront permissions</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="awsSecretKey" class="wizard-form-label">AWS Secret Access Key</label>
+                            <input type="password" class="form-control" id="awsSecretKey">
+                            <div class="form-text">AWS secret access key (keep this secure)</div>
+                        </div>
+                    </div>
+
+                    <div class="wizard-alert wizard-alert-info mt-3">
+                        <i class="fa-solid fa-circle-info me-2"></i>
+                        <strong>IAM Permissions Required:</strong> Your AWS IAM user needs the following permissions:
+                        <ul class="mb-0 mt-2">
+                            <li><code>cloudfront:CreateInvalidation</code></li>
+                            <li><code>cloudfront:GetInvalidation</code></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wizard-actions">
+                <a href="@Url.Page("/EditorSetup")" class="btn btn-sky-secondary">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Back
+                </a>
+                <button type="submit" class="btn btn-sky-primary">
+                    <i class="fa-solid fa-floppy-disk me-1"></i> Save and Test Settings
+                </button>
+                <button type="button" class="btn btn-sky-secondary">
+                    <i class="fa-solid fa-trash me-1"></i> Remove CDN
+                </button>
+            </div>
+        </form>
+    </main>
+
+@section Scripts {
+        <script src="~/js/cdn-setup.js"></script>
+}
