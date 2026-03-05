@@ -1,0 +1,125 @@
+@page
+@model SkyWizardDemo.Pages.TemplateInventoryModel
+@{
+    Layout = "_LayoutSetup";
+    ViewData["Title"] = "Page Template Inventory";
+    ViewData["BodyClass"] = "wizard-theme wizard-step-template-inventory";
+}
+
+<div class="template-inventory-container">
+    <main>
+        <h1 class="wizard-title">Page Template Inventory</h1>
+        <p class="wizard-subtitle">Manage and create reusable page templates</p>
+
+        <div class="wizard-card">
+            <div class="wizard-card-head">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span><i class="fa-solid fa-layer-group me-2"></i> Templates</span>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <a href="#" class="btn btn-sky-primary btn-sm">
+                            <i class="fa-solid fa-plus me-1"></i> New Template
+                        </a>
+                        <a href="#" class="btn btn-sky-secondary btn-sm">
+                            <i class="fa-solid fa-paintbrush me-1"></i> Site Designs
+                        </a>
+                        <a href="@Url.Page("/PageInventory")" class="btn btn-sky-secondary btn-sm">
+                            <i class="fa-solid fa-file-lines me-1"></i> Page List
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="wizard-card-body">
+                <div class="wizard-alert wizard-alert-info mb-3">
+                    <i class="fa-solid fa-circle-info me-2"></i>
+                    Templates enable you to create consistent page layouts. 
+                    <a href="https://www.moonrise.net/cosmos/documentation/creating_content/live_editor#enable-the-live-editor-for-a-template-or-page" target="_blank" class="text-decoration-underline">
+                        Learn how to enable live editor for a template <i class="fa-solid fa-arrow-up-right-from-square ms-1"></i>
+                    </a>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width: 280px;">Actions</th>
+                                <th scope="col" class="text-center" style="width: 200px;">Status</th>
+                                <th scope="col" style="width: 200px;">Title</th>
+                                <th scope="col">Description</th>
+                                <th scope="col" class="text-center" style="width: 80px;">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var template in Model.Templates)
+                            {
+                                <tr style="vertical-align: middle;">
+                                    <td>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <a href="#" class="btn btn-sky-secondary btn-sm" title="Design editor">
+                                                <i class="fa-solid fa-paintbrush"></i> Design
+                                            </a>
+                                            <a href="#" class="btn btn-sky-secondary btn-sm" title="Code editor">
+                                                <i class="fa-solid fa-code"></i> Code
+                                            </a>
+                                            <a href="#" class="btn btn-sky-secondary btn-sm" title="View pages">
+                                                <i class="fa-solid fa-file-lines"></i> Pages (@template.PageCount)
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        @if (template.IsLiveEditorEnabled)
+                                        {
+                                            <span class="badge bg-success" style="padding: 0.5rem 0.75rem;">
+                                                <i class="fa-solid fa-circle-check me-1"></i> Live editor enabled
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary" style="padding: 0.5rem 0.75rem;">
+                                                <i class="fa-solid fa-circle-xmark me-1"></i> Live editor disabled
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <strong>@template.Name</strong>
+                                            <br />
+                                            <small class="text-muted">Modified: @template.LastModified.ToString("MMM dd, yyyy")</small>
+                                        </div>
+                                    </td>
+                                    <td>@template.Description</td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-danger btn-sm" title="Send to trash">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="wizard-alert wizard-alert-note mt-3">
+                    <i class="fa-solid fa-lightbulb me-2"></i>
+                    Templates with live editor enabled allow content to be edited visually using the WYSIWYG editor.
+                </div>
+            </div>
+        </div>
+
+        <div class="wizard-actions">
+            <a href="@Url.Page("/Index")" class="btn btn-sky-secondary">
+                <i class="fa-solid fa-arrow-left me-1"></i> Back to Dashboard
+            </a>
+            <a href="#" class="btn btn-sky-primary">
+                <i class="fa-solid fa-plus me-1"></i> Create New Template
+            </a>
+        </div>
+    </main>
+
+@section Scripts {
+    <script>
+        function selectId(id) {
+            console.log('Selected template:', id);
+            return true;
+        }
+    </script>
+}

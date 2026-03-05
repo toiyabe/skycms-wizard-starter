@@ -1,0 +1,116 @@
+@page
+@model SkyWizardDemo.Pages.PageInventoryModel
+@{
+    Layout = "_LayoutSetup";
+    ViewData["Title"] = "Web Page Inventory";
+    ViewData["BodyClass"] = "wizard-theme wizard-step-page-inventory";
+}
+
+<div class="page-inventory-container">
+    <main>
+        <h1 class="wizard-title">Web Page Inventory</h1>
+        <p class="wizard-subtitle">Manage all pages on your website</p>
+
+        <div class="wizard-card">
+            <div class="wizard-card-head">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>Page Management</span>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <a href="#" class="btn btn-sky-primary btn-sm">
+                            <i class="fa-solid fa-plus me-1"></i> New Page
+                        </a>
+                        <a href="#" class="btn btn-sky-secondary btn-sm">
+                            <i class="fa-solid fa-layer-group me-1"></i> Templates
+                        </a>
+                        <a href="#" class="btn btn-sky-secondary btn-sm">
+                            <i class="fa-solid fa-paintbrush me-1"></i> Site Design
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="wizard-card-body">
+                <div class="wizard-alert wizard-alert-info mb-3">
+                    <i class="fa-solid fa-circle-info me-2"></i>
+                    <strong>Quick Actions:</strong> Edit your home page, create new pages, or manage templates from the buttons above.
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>URL</th>
+                                <th>Template</th>
+                                <th>Status</th>
+                                <th>Author</th>
+                                <th>Last Modified</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Pages)
+                            {
+                                <tr>
+                                    <td><strong>@item.Title</strong></td>
+                                    <td><code>@item.Url</code></td>
+                                    <td>@item.Template</td>
+                                    <td>
+                                        @if (item.Status == "Published")
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="fa-solid fa-circle-check me-1"></i> Published
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning text-dark">
+                                                <i class="fa-solid fa-clock me-1"></i> Draft
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>@item.Author</td>
+                                    <td>@item.LastModified.ToString("MMM dd, yyyy h:mm tt")</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <a href="#" class="btn btn-success btn-sm" title="Edit page">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </a>
+                                            <a href="#" class="btn btn-secondary btn-sm" title="View on website">
+                                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                            </a>
+                                            <a href="#" class="btn btn-secondary btn-sm" title="Clone page">
+                                                <i class="fa-solid fa-copy"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-danger btn-sm" title="Send to trash">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="wizard-alert wizard-alert-note mt-3">
+                    <i class="fa-solid fa-lightbulb me-2"></i>
+                    Click the edit button to modify pages. Use the action buttons to view, clone, or delete individual pages.
+                </div>
+            </div>
+        </div>
+
+        <div class="wizard-actions">
+            <a href="@Url.Page("/Index")" class="btn btn-sky-secondary">
+                <i class="fa-solid fa-arrow-left me-1"></i> Back to Dashboard
+            </a>
+            <a href="#" class="btn btn-sky-primary">
+                <i class="fa-solid fa-plus me-1"></i> Create New Page
+            </a>
+        </div>
+    </main>
+
+@section Scripts {
+        <script>
+            // Add any page-specific JavaScript here if needed
+        </script>
+}
