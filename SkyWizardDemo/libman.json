@@ -1,0 +1,36 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "tabulator@5.5.2",
+      "destination": "wwwroot/lib/tabulator-tables/",
+      "files": [
+        "dist/css/tabulator_midnight.min.css",
+        "dist/js/tabulator.min.js"
+      ]
+    },
+    {
+      "library": "luxon@3.4.4",
+      "destination": "wwwroot/lib/luxon/",
+      "files": [
+        "build/global/luxon.min.js"
+      ]
+    },
+    {
+      "library": "bootstrap@5.3.2",
+      "destination": "wwwroot/lib/bootstrap/",
+      "files": [
+        "dist/css/bootstrap.min.css",
+        "dist/js/bootstrap.bundle.min.js"
+      ]
+    },
+    {
+      "library": "jquery@3.7.1",
+      "destination": "wwwroot/lib/jquery/",
+      "files": [
+        "dist/jquery.min.js"
+      ]
+    }
+  ]
+}
