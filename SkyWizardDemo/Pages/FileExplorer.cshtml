@@ -14,11 +14,17 @@
                 <p class="wizard-subtitle mb-0">Browse and manage your website files</p>
             </div>
             <div class="btn-group" role="group">
-                <button type="button" class="btn btn-sky-secondary btn-sm" onclick="toggleView('list')">
-                    <i class="fa-solid fa-list me-1"></i> List View
+                <button type="button" class="btn btn-sky-primary btn-sm" id="btnBigIcons" onclick="toggleView('bigIcons')">
+                    <i class="fa-solid fa-grid-2 me-1"></i> Big Icons
                 </button>
-                <button type="button" class="btn btn-sky-primary btn-sm" onclick="toggleView('grid')">
-                    <i class="fa-solid fa-grid me-1"></i> Grid View
+                <button type="button" class="btn btn-sky-secondary btn-sm" id="btnSmallIcons" onclick="toggleView('smallIcons')">
+                    <i class="fa-solid fa-grid me-1"></i> Small Icons
+                </button>
+                <button type="button" class="btn btn-sky-secondary btn-sm" id="btnList" onclick="toggleView('list')">
+                    <i class="fa-solid fa-list me-1"></i> List
+                </button>
+                <button type="button" class="btn btn-sky-secondary btn-sm" id="btnDetails" onclick="toggleView('details')">
+                    <i class="fa-solid fa-table-list me-1"></i> Details
                 </button>
             </div>
         </div>
@@ -58,7 +64,8 @@
                         </div>
                     </div>
                     <div class="wizard-card-body">
-                        <div id="gridView" class="file-grid">
+                        <!-- Big Icons View -->
+                        <div id="bigIconsView" class="file-view">
                             <div class="row g-3">
                                 @foreach (var item in Model.Items)
                                 {
@@ -92,22 +99,83 @@
                             </div>
                         </div>
 
-                        <div id="listView" class="file-list" style="display: none;">
+                        <!-- Small Icons View -->
+                        <div id="smallIconsView" class="file-view" style="display: none;">
+                            <div class="row g-2">
+                                @foreach (var item in Model.Items)
+                                {
+                                    <div class="col-md-2 col-sm-3 col-4">
+                                        <div class="file-item @(item.IsFolder ? "folder-item" : "file-item")" onclick="selectItem('@item.Name')" style="cursor: pointer; padding: 0.5rem; border-radius: 6px; transition: background 0.2s;">
+                                            <div class="file-icon text-center">
+                                                @if (item.IsFolder)
+                                                {
+                                                    <i class="fa-solid fa-folder" style="font-size: 1.5rem; color: #3996ff;"></i>
+                                                }
+                                                else if (item.IsImage)
+                                                {
+                                                    <i class="fa-solid fa-file-image" style="font-size: 1.5rem; color: #22c55e;"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="fa-solid fa-file" style="font-size: 1.5rem; color: #6b7280;"></i>
+                                                }
+                                            </div>
+                                            <div class="file-name text-center mt-1">
+                                                <small style="font-size: 0.75rem;"><strong>@item.Name</strong></small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- List View -->
+                        <div id="listView" class="file-view" style="display: none;">
+                            <div class="list-group">
+                                @foreach (var item in Model.Items)
+                                {
+                                    <div class="list-group-item list-group-item-action d-flex align-items-center" onclick="selectItem('@item.Name')" style="cursor: pointer; border-radius: 6px; margin-bottom: 0.25rem;">
+                                        @if (item.IsFolder)
+                                        {
+                                            <i class="fa-solid fa-folder me-3" style="font-size: 1.25rem; color: #3996ff; width: 24px;"></i>
+                                        }
+                                        else if (item.IsImage)
+                                        {
+                                            <i class="fa-solid fa-file-image me-3" style="font-size: 1.25rem; color: #22c55e; width: 24px;"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fa-solid fa-file me-3" style="font-size: 1.25rem; color: #6b7280; width: 24px;"></i>
+                                        }
+                                        <div class="flex-grow-1">
+                                            <strong>@item.Name</strong>
+                                        </div>
+                                        @if (!item.IsFolder)
+                                        {
+                                            <span class="text-muted me-3">@item.Size</span>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Details View -->
+                        <div id="detailsView" class="file-view" style="display: none;">
                             <div class="table-responsive">
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>Type</th>
-                                            <th>Size</th>
-                                            <th>Modified</th>
-                                            <th>Actions</th>
+                                            <th style="width: 40%;">Name</th>
+                                            <th style="width: 15%;">Type</th>
+                                            <th style="width: 15%;">Size</th>
+                                            <th style="width: 20%;">Modified</th>
+                                            <th style="width: 10%;" class="text-center">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach (var item in Model.Items)
                                         {
-                                            <tr>
+                                            <tr style="vertical-align: middle;">
                                                 <td>
                                                     @if (item.IsFolder)
                                                     {
@@ -125,8 +193,8 @@
                                                 </td>
                                                 <td>@item.Type</td>
                                                 <td>@item.Size</td>
-                                                <td>@item.Modified.ToString("MMM dd, yyyy")</td>
-                                                <td>
+                                                <td>@item.Modified.ToString("MMM dd, yyyy h:mm tt")</td>
+                                                <td class="text-center">
                                                     <div class="btn-group btn-group-sm" role="group">
                                                         <button type="button" class="btn btn-secondary btn-sm" title="Download">
                                                             <i class="fa-solid fa-download"></i>
@@ -200,15 +268,32 @@
 @section Scripts {
     <script>
         function toggleView(view) {
-            const gridView = document.getElementById('gridView');
-            const listView = document.getElementById('listView');
-            
-            if (view === 'grid') {
-                gridView.style.display = 'block';
-                listView.style.display = 'none';
-            } else {
-                gridView.style.display = 'none';
-                listView.style.display = 'block';
+            // Hide all views
+            const views = ['bigIconsView', 'smallIconsView', 'listView', 'detailsView'];
+            views.forEach(v => {
+                const element = document.getElementById(v);
+                if (element) element.style.display = 'none';
+            });
+
+            // Show selected view
+            const selectedView = document.getElementById(view + 'View');
+            if (selectedView) selectedView.style.display = 'block';
+
+            // Update button states
+            const buttons = ['btnBigIcons', 'btnSmallIcons', 'btnList', 'btnDetails'];
+            buttons.forEach(btnId => {
+                const btn = document.getElementById(btnId);
+                if (btn) {
+                    btn.classList.remove('btn-sky-primary');
+                    btn.classList.add('btn-sky-secondary');
+                }
+            });
+
+            // Highlight active button
+            const activeBtn = document.getElementById('btn' + view.charAt(0).toUpperCase() + view.slice(1));
+            if (activeBtn) {
+                activeBtn.classList.remove('btn-sky-secondary');
+                activeBtn.classList.add('btn-sky-primary');
             }
         }
 
