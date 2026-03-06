@@ -1,0 +1,30 @@
+/* Additional styles for logo and layout fixes */
+
+.wizard-logo {
+  width: 32px;
+  height: 32px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.wizard-brand-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Ensure main content has proper spacing */
+.wizard-shell main {
+  position: relative;
+  z-index: 1;
+}
+
+/* File Explorer grid item hover effect */
+.file-item:hover {
+  background: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Template Inventory table improvements */
+.table > tbody > tr {
+  vertical-align: middle;
+}

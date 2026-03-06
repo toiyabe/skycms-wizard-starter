@@ -1,0 +1,158 @@
+@page
+@model SkyWizardDemo.Pages.Account.Manage.IndexModel
+@{
+    Layout = "_LayoutSetup";
+    ViewData["Title"] = "Account Settings";
+    ViewData["BodyClass"] = "wizard-theme wizard-step-account-manage";
+}
+
+<div class="account-manage-container">
+    <main>
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-7">
+                <h1 class="wizard-title">Account Settings</h1>
+                <p class="wizard-subtitle">Manage your profile and security settings</p>
+
+                @if (Model.StatusMessage != null)
+                {
+                    <div class="wizard-alert wizard-alert-info mb-3">
+                        <i class="fa-solid fa-circle-check me-2"></i>
+                        @Model.StatusMessage
+                    </div>
+                }
+
+                <div class="wizard-card">
+                    <div class="wizard-card-head">
+                        <i class="fa-solid fa-user me-2"></i> Profile Information
+                    </div>
+                    <div class="wizard-card-body">
+                        <form method="post">
+                            @if (!ViewData.ModelState.IsValid)
+                            {
+                                <div asp-validation-summary="All" class="wizard-alert wizard-alert-info mb-3"></div>
+                            }
+
+                            <div class="mb-3">
+                                <label asp-for="Input.Email" class="wizard-form-label">Email</label>
+                                <input asp-for="Input.Email" class="form-control" disabled />
+                                <div class="form-text">
+                                    @if (Model.IsEmailConfirmed)
+                                    {
+                                        <span class="text-success">
+                                            <i class="fa-solid fa-circle-check me-1"></i> Email confirmed
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-warning">
+                                            <i class="fa-solid fa-triangle-exclamation me-1"></i> Email not confirmed.
+                                            <a asp-page="/Account/ResendEmailConfirmation">Resend confirmation</a>
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Input.PhoneNumber" class="wizard-form-label">Phone Number</label>
+                                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="(555) 123-4567" />
+                                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                            </div>
+
+                            <div class="wizard-actions">
+                                <a asp-page="/Index" class="btn btn-sky-secondary">
+                                    <i class="fa-solid fa-arrow-left me-1"></i> Back
+                                </a>
+                                <button type="submit" class="btn btn-sky-primary">
+                                    <i class="fa-solid fa-floppy-disk me-1"></i> Save Changes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="wizard-card">
+                    <div class="wizard-card-head">
+                        <i class="fa-solid fa-shield-halved me-2"></i> Security
+                    </div>
+                    <div class="wizard-card-body">
+                        <div class="wizard-tile-grid">
+                            <div class="wizard-tile">
+                                <h4><i class="fa-solid fa-key me-2 text-primary"></i>Password</h4>
+                                <p class="mb-3">Change your password to keep your account secure</p>
+                                <a asp-page="./ChangePassword" class="btn btn-sky-secondary btn-sm">
+                                    <i class="fa-solid fa-pen me-1"></i> Change Password
+                                </a>
+                            </div>
+
+                            <div class="wizard-tile">
+                                <h4><i class="fa-solid fa-mobile-screen me-2 text-primary"></i>Two-Factor Authentication</h4>
+                                <p class="mb-3">Add an extra layer of security to your account</p>
+                                @if (Model.HasAuthenticator)
+                                {
+                                    <span class="badge bg-success mb-2">
+                                        <i class="fa-solid fa-circle-check me-1"></i> Enabled
+                                    </span>
+                                    <br />
+                                    <a asp-page="./TwoFactorAuthentication" class="btn btn-sky-secondary btn-sm">
+                                        <i class="fa-solid fa-gear me-1"></i> Manage 2FA
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a asp-page="./TwoFactorAuthentication" class="btn btn-sky-primary btn-sm">
+                                        <i class="fa-solid fa-plus me-1"></i> Enable 2FA
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="wizard-card">
+                    <div class="wizard-card-head" style="background: rgba(220, 53, 69, 0.1); border-bottom-color: rgba(220, 53, 69, 0.3);">
+                        <i class="fa-solid fa-triangle-exclamation me-2"></i> Danger Zone
+                    </div>
+                    <div class="wizard-card-body">
+                        <div class="wizard-alert wizard-alert-note">
+                            <i class="fa-solid fa-exclamation-circle me-2"></i>
+                            <strong>Delete Account:</strong> Once you delete your account, there is no going back. Please be certain.
+                        </div>
+                        <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
+                            <i class="fa-solid fa-trash me-1"></i> Delete Account
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Delete Account Modal -->
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteAccountModalLabel">
+                    <i class="fa-solid fa-triangle-exclamation me-2"></i> Confirm Account Deletion
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Are you absolutely sure?</strong></p>
+                <p>This action cannot be undone. This will permanently delete your account and remove all of your data from our servers.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form asp-page-handler="DeleteAccount" method="post">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fa-solid fa-trash me-1"></i> Delete My Account
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

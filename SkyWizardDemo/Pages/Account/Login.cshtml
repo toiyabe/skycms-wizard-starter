@@ -1,0 +1,161 @@
+@page
+@model SkyWizardDemo.Pages.Account.LoginModel
+@{
+    Layout = "_LayoutSetup";
+    ViewData["Title"] = "Log in";
+    ViewData["BodyClass"] = "wizard-theme wizard-step-login";
+}
+
+<div class="login-container">
+    <main>
+        @if (Model.AccessPending)
+        {
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="wizard-card">
+                        <div class="wizard-card-head">
+                            <i class="fa-solid fa-clock me-2"></i> One more step...
+                        </div>
+                        <div class="wizard-card-body">
+                            <p>An administrator of this website needs to approve your account before you can continue.</p>
+                            <div class="wizard-actions">
+                                <a href="@Url.Page("/Index")" class="btn btn-sky-secondary">
+                                    <i class="fa-solid fa-arrow-left me-1"></i> Back to Home
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else if (Model.TotpSent)
+        {
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="wizard-card">
+                        <div class="wizard-card-head text-center">
+                            <i class="fa-solid fa-envelope-circle-check me-2"></i> Login Link Sent
+                        </div>
+                        <div class="wizard-card-body">
+                            <div class="wizard-alert wizard-alert-info mb-3">
+                                <i class="fa-solid fa-circle-info me-2"></i>
+                                A login link has been sent to your email address.
+                            </div>
+                            <div class="wizard-tile">
+                                <h4>Please note:</h4>
+                                <ul class="wizard-list">
+                                    <li>Check your junk or spam folder if you did not receive the email</li>
+                                    <li>The link is valid for 20 minutes and can only be used once</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <h1 class="wizard-title text-center">Login to Your Account</h1>
+
+                    <div class="wizard-card">
+                        <div class="wizard-card-body">
+                            <div class="text-center mb-4">
+                                <p class="mb-2">Don't have an account?</p>
+                                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="btn btn-sky-secondary btn-sm">
+                                    <i class="fa-solid fa-user-plus me-1"></i> Create Account
+                                </a>
+                            </div>
+
+                            <form id="account" method="post" asp-antiforgery="true">
+                                @if (!ViewData.ModelState.IsValid)
+                                {
+                                    <div asp-validation-summary="All" class="wizard-alert wizard-alert-info mb-3"></div>
+                                }
+
+                                <input type="hidden" asp-for="Input.UseTotp" />
+
+                                <div class="mb-3">
+                                    <label asp-for="Input.Email" class="wizard-form-label">
+                                        Email <span class="wizard-required">*</span>
+                                    </label>
+                                    <input asp-for="Input.Email" class="form-control" placeholder="your@email.com" />
+                                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                                    <div class="form-text">
+                                        <a asp-page="./ResendEmailConfirmation" class="text-decoration-underline">
+                                            Resend email confirmation
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div id="passwordGroup" class="mb-3">
+                                    <label asp-for="Input.Password" class="wizard-form-label">
+                                        Password <span class="wizard-required">*</span>
+                                    </label>
+                                    <input asp-for="Input.Password" class="form-control" placeholder="Enter your password" />
+                                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                                    <div class="form-text">
+                                        <a asp-page="./ForgotPassword" class="text-decoration-underline">
+                                            Forgot your password?
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="form-check mb-3" style="display:none">
+                                    <input asp-for="Input.RememberMe" class="form-check-input" type="checkbox" />
+                                    <label asp-for="Input.RememberMe" class="form-check-label"></label>
+                                </div>
+
+                                <div class="wizard-actions">
+                                    <a href="@Url.Page("/Index")" class="btn btn-sky-secondary">
+                                        <i class="fa-solid fa-arrow-left me-1"></i> Cancel
+                                    </a>
+                                    <button type="submit" class="btn btn-sky-primary">
+                                        <i class="fa-solid fa-right-to-bracket me-1"></i> Log In
+                                    </button>
+                                </div>
+                            </form>
+
+                            @if (Model.ExternalLogins?.Count > 0)
+                            {
+                                <hr class="my-4" />
+                                <h4 class="text-center mb-3">Or login with</h4>
+
+                                <form asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                                    <div class="d-grid gap-2">
+                                        @foreach (var provider in Model.ExternalLogins)
+                                        {
+                                            @if (provider.Name == "Google")
+                                            {
+                                                <button type="submit" name="provider" value="@provider.Name" class="btn btn-outline-secondary">
+                                                    <i class="fa-brands fa-google me-2"></i> Login with @provider.DisplayName
+                                                </button>
+                                            }
+                                            else if (provider.Name == "Microsoft")
+                                            {
+                                                <button type="submit" name="provider" value="@provider.Name" class="btn btn-outline-secondary">
+                                                    <i class="fa-brands fa-microsoft me-2"></i> Login with @provider.DisplayName
+                                                </button>
+                                            }
+                                            else if (provider.Name == "Facebook")
+                                            {
+                                                <button type="submit" name="provider" value="@provider.Name" class="btn btn-outline-primary">
+                                                    <i class="fa-brands fa-facebook me-2"></i> Login with @provider.DisplayName
+                                                </button>
+                                            }
+                                        }
+                                    </div>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </main>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

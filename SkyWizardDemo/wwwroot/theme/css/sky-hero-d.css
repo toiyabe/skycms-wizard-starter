@@ -1,7 +1,12 @@
-/* Precompiled CSS for SkyWizardDemo */
+/* Precompiled CSS aligned to theme/scss/sky-hero.scss */
 @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
 
 :root {
+  --sky-veil-opacity: 0.12;
+  --sky-radius: 16px;
+  --sky-radius-sm: 12px;
+  --sky-shadow-strong: 0 12px 30px rgba(15, 36, 66, 0.12);
+  --sky-shadow-tile: 0 4px 14px rgba(15, 36, 66, 0.08);
   --wizard-text: #10233d;
   --wizard-muted: #39597d;
   --wizard-card-bg: rgba(233, 241, 251, 0.58);
@@ -57,7 +62,7 @@ body.wizard-theme.wizard-step-welcome {
       rgba(245, 251, 255, 0.6),
       rgba(220, 235, 249, 0.66)
     ),
-    url("/img/HeroBackground.jpg") center / cover no-repeat fixed;
+    url("../../img/HeroBackground.jpg") center / cover no-repeat fixed;
 }
 
 body.wizard-theme:not(.wizard-step-welcome) {
@@ -67,7 +72,7 @@ body.wizard-theme:not(.wizard-step-welcome) {
       rgba(244, 250, 255, 0.84),
       rgba(222, 236, 250, 0.86)
     ),
-    url("/img/clouds-subtle.svg") center top / 980px repeat,
+    url("../../img/clouds-subtle.svg") center top / 980px repeat,
     #d6e7f8;
 }
 
@@ -233,8 +238,8 @@ a:hover {
 
 .wizard-alert-info {
   color: #0b4e66;
-  background: rgba(188, 236, 251, 0.92);
-  border-color: rgba(132, 216, 248, 0.95);
+  background: rgba(192, 238, 250, 0.9);
+  border-color: rgba(129, 222, 250, 0.95);
 }
 
 .wizard-alert-note {
@@ -350,19 +355,7 @@ body.wizard-theme .text-muted {
 }
 
 #passwordRules li {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
   color: #3f5f82;
-}
-
-#passwordRules li .rule-icon {
-  width: 1rem;
-  min-width: 1rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  visibility: hidden;
 }
 
 #passwordRules li.is-valid-rule {
@@ -370,11 +363,7 @@ body.wizard-theme .text-muted {
   font-weight: 600;
 }
 
-#passwordRules li.is-valid-rule .rule-icon {
-  visibility: visible;
-}
-
-#passwordRules li.is-valid-rule .rule-icon i {
+#passwordRules li.is-valid-rule i {
   color: #16a262;
 }
 

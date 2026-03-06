@@ -1,0 +1,65 @@
+@page
+@{
+    Layout = "_LayoutSetup";
+    ViewData["Title"] = "Publish Website";
+    ViewData["BodyClass"] = "wizard-theme wizard-step-publish-website";
+}
+
+<div class="publish-website-container">
+    <main>
+        <h1 class="wizard-title">Publish Website</h1>
+        <p class="wizard-subtitle">Deploy your changes to the live website</p>
+
+        <div class="wizard-card">
+            <div class="wizard-card-head">
+                <i class="fa-solid fa-globe me-2"></i> Publishing Options
+            </div>
+            <div class="wizard-card-body">
+                <div class="wizard-tile mb-3">
+                    <h4><i class="fa-solid fa-circle-info me-2 text-primary"></i>What happens when you publish?</h4>
+                    <ul class="wizard-list">
+                        <li>If static web pages are enabled, publishes a fresh copy of all of them</li>
+                        <li>If a CDN is configured, refreshes the Content Delivery Network (CDN) cache</li>
+                    </ul>
+                </div>
+
+                <div class="wizard-alert wizard-alert-note mb-3">
+                    <i class="fa-solid fa-triangle-exclamation me-2"></i>
+                    <strong>Warning:</strong> Websites with large amounts of content may experience temporary performance degradation as caching mechanisms reload content.
+                </div>
+
+                <button id="btnPublish" class="btn btn-sky-primary btn-lg" onclick="publish()">
+                    <i class="fa-solid fa-rocket me-2"></i> Publish Website
+                </button>
+
+                <!-- Success Alert -->
+                <div id="successAlert" class="wizard-alert wizard-alert-info mt-4" style="display: none;">
+                    <i class="fa-solid fa-circle-check me-2"></i>
+                    <strong>Success!</strong> Website publishing completed successfully!
+                </div>
+
+                <!-- Progress Container -->
+                <div id="progressContainer" class="mt-4" style="display: none;">
+                    <div class="wizard-progress-track" style="height: 30px;">
+                        <div id="publishProgressBar" class="wizard-progress-fill" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
+                            0%
+                        </div>
+                    </div>
+                    <p id="statusMsg" class="mt-2"></p>
+                </div>
+
+                <div id="purgeDetails" class="mt-3"></div>
+            </div>
+        </div>
+
+        <div class="wizard-actions">
+            <a href="@Url.Page("/Index")" class="btn btn-sky-secondary">
+                <i class="fa-solid fa-arrow-left me-1"></i> Back to Dashboard
+            </a>
+        </div>
+    </main>
+
+@section Scripts {
+        <script src="https://cdn.jsdelivr.net/npm/@@microsoft/signalr@latest/dist/browser/signalr.min.js"></script>
+        <script src="~/js/publish-website.js"></script>
+}
